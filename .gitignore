@@ -1,0 +1,25 @@
+# Sistema operativo
+.DS_Store
+
+# Editor e strumenti
+.idea/
+.vscode/
+*.iml
+.claude/
+
+# Variabili d'ambiente e segreti
+.env
+.env.local
+*.env
+env.properties
+!*.example
+
+# Backend (Maven)
+backend/target/
+
+# Frontend (Node / Vite)
+frontend/node_modules/
+frontend/dist/
+
+# Log
+*.log
