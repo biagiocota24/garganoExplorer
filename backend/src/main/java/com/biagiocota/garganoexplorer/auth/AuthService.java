@@ -35,7 +35,7 @@ public class AuthService {
             case VISITOR -> Role.VISITOR;
         };
         newUser.setRole(role);
-        User saved = userRepository.save(newUser);
+        User saved = userRepository.saveAndFlush(newUser);
         return UserResponse.from(saved);
     }
 }
