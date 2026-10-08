@@ -1,6 +1,7 @@
 package com.biagiocota.garganoexplorer.common.exception;
 
 import com.biagiocota.garganoexplorer.auth.EmailAlreadyUsedException;
+import com.biagiocota.garganoexplorer.auth.InvalidCredentialsException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -57,6 +58,13 @@ public class GlobalExceptionHandler {
     public ProblemDetail handleHttpMessageNotReadable(HttpMessageNotReadableException ex) {
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Richiesta non valida o malformata");
         problem.setTitle("Dato non leggibile");
+        return problem;
+    }
+
+    @ExceptionHandler(InvalidCredentialsException.class)
+    public ProblemDetail handleInvalidCredentialsException(InvalidCredentialsException ex) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.UNAUTHORIZED, "Email o password non valide");
+        problem.setTitle("Credenziali non valide");
         return problem;
     }
 }
