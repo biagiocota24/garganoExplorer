@@ -2,6 +2,7 @@ package com.biagiocota.garganoexplorer.common.exception;
 
 import com.biagiocota.garganoexplorer.auth.EmailAlreadyUsedException;
 import com.biagiocota.garganoexplorer.auth.InvalidCredentialsException;
+import com.biagiocota.garganoexplorer.user.UserNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
 import org.springframework.http.HttpStatus;
@@ -23,6 +24,13 @@ public class GlobalExceptionHandler {
     public ProblemDetail handleEmailAlreadyUsed(EmailAlreadyUsedException ex) {
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
         problem.setTitle("Email già registrata");
+        return problem;
+    }
+
+    @ExceptionHandler(UserNotFoundException.class)
+    public ProblemDetail handleUserNotFound(UserNotFoundException ex) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
+        problem.setTitle("Utente non trovato");
         return problem;
     }
 
