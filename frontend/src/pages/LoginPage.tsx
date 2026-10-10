@@ -1,11 +1,12 @@
 import { useState } from "react";
 import { useAuthStore } from "../stores/authStore";
-import { Link, useNavigate } from "react-router";
+import { Link, useLocation, useNavigate } from "react-router";
 import { ApiError } from "../api/client";
 
 const LoginPage = function () {
   const navigate = useNavigate();
-
+  const location = useLocation();
+  const justRegistred = location.state?.registred === true;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -34,6 +35,8 @@ const LoginPage = function () {
 
   return (
     <>
+      {justRegistred && <p style={{color:"green"}}>Account creato , ora accedi</p>}
+
       <form onSubmit={handleSubmit}>
         <label htmlFor="email">email</label>
         <input
