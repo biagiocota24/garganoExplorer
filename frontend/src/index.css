@@ -1,0 +1,118 @@
+/* 1. I colori del progetto, in un solo posto */
+:root {
+  --ge-primary: #1a7a96;
+  --ge-accent: #00a8d8;
+  --ge-text: #2c3e50;
+  --ge-text-muted: #6b7d87;
+  --ge-text-soft: #a3b3ba;
+  --ge-border: #e3ebee;
+  --ge-bg: #f7fafb;
+  --ge-tint: #eaf6f9;
+  --ge-gradient: linear-gradient(135deg, #1a7a96, #00a8d8);
+
+  /* 2. Le variabili di Bootstrap, collegate ai nostri valori */
+  --bs-body-font-family: "Inter", sans-serif;
+  --bs-body-color: var(--ge-text);
+  --bs-body-bg: var(--ge-bg);
+  --bs-primary: #1a7a96;
+  --bs-primary-rgb: 26, 122, 150;
+  --bs-link-color: var(--ge-primary);
+  --bs-link-color-rgb: 26, 122, 150;
+  --bs-link-hover-color: var(--ge-accent);
+  --bs-link-hover-color-rgb: 0, 168, 216;
+  --bs-border-color: var(--ge-border);
+  --bs-danger: #ff6b6b;
+  --bs-danger-rgb: 255, 107, 107;
+  --bs-success: #27ae60;
+  --bs-success-rgb: 39, 174, 96;
+}
+
+/* 3. Titoli in Outfit */
+h1, h2, h3, h4, h5, h6 {
+  font-family: "Outfit", sans-serif;
+  font-weight: 700;
+  color: var(--ge-text);
+}
+
+/* 4. Pulsante principale: Bootstrap usa variabili proprie per i pulsanti */
+.btn-primary {
+  --bs-btn-bg: var(--ge-primary);
+  --bs-btn-border-color: transparent;
+  --bs-btn-hover-bg: var(--ge-primary);
+  --bs-btn-hover-border-color: transparent;
+  --bs-btn-active-bg: var(--ge-primary);
+  --bs-btn-disabled-bg: var(--ge-primary);
+  --bs-btn-disabled-border-color: transparent;
+  background-image: var(--ge-gradient);
+  border-radius: 14px;
+  padding: 0.85rem 1rem;
+  font-family: "Outfit", sans-serif;
+  font-weight: 600;
+  box-shadow: 0 10px 24px -8px rgba(26, 122, 150, 0.55);
+  transition: transform 0.2s ease, box-shadow 0.3s ease;
+}
+.btn-primary:hover:not(:disabled) {
+  transform: translateY(-2px);
+  box-shadow: 0 14px 28px -8px rgba(26, 122, 150, 0.6);
+}
+
+/* 5. Campi dei form */
+.form-label {
+  font-size: 0.8125rem;
+  font-weight: 600;
+  color: var(--ge-text);
+}
+.form-control,
+.form-select {
+  border: 1.5px solid var(--ge-border);
+  border-radius: 12px;
+  padding: 0.8rem 0.9rem;
+}
+.form-control::placeholder {
+  color: var(--ge-text-soft);
+}
+.form-control:focus,
+.form-select:focus {
+  border-color: var(--ge-accent);
+  box-shadow: 0 0 0 4px rgba(0, 168, 216, 0.12);
+}
+
+
+/* Pagine di accesso */
+.auth-hero {
+  flex: 0 0 46%;
+  padding: 3.5rem;
+  color: #fff;
+  background:
+    linear-gradient(160deg, rgba(20, 90, 120, 0.88), rgba(0, 150, 190, 0.65)),
+    url("/gargano.jpg") center / cover;
+}
+
+.auth-hero-title {
+  font-family: "Outfit", sans-serif;
+  font-weight: 800;
+  font-size: clamp(2rem, 4vw, 2.75rem);
+  line-height: 1.15;
+  color: #fff;
+}
+
+.auth-logo {
+  width: 40px;
+  height: 40px;
+  border-radius: 12px;
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--ge-gradient);
+  font-size: 1.25rem;
+}
+
+.auth-card {
+  width: 100%;
+  max-width: 420px;
+  border: none;
+  border-radius: 24px;
+  box-shadow:
+    0 20px 50px -20px rgba(26, 122, 150, 0.22),
+    0 2px 8px rgba(26, 122, 150, 0.06);
+}

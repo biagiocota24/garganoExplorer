@@ -1,5 +1,4 @@
 import { useEffect } from "react";
-import "./App.css";
 import { useAuthStore } from "./stores/authStore";
 import { Link, Route, Routes } from "react-router";
 import HomePage from "./pages/HomePage";
