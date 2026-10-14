@@ -16,7 +16,7 @@ const AppLayout = () => {
   return (
     <>
       <Navbar expand="lg" sticky="top" className="app-navbar">
-        <Container>
+        <Container fluid>
           <Navbar.Brand
             as={Link}
             to="/"
