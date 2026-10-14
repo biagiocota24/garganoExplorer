@@ -7,7 +7,7 @@ type AuthLayoutProps = {
 
 function AuthLayout({ children }: AuthLayoutProps) {
   return (
-    <div className="d-flex min-vh-100">
+    <div className="d-flex min-vh-100 animate-in">
       {/* Pannello sinistro: solo su schermi grandi */}
       <div className="auth-hero d-none d-lg-flex flex-column justify-content-between">
         <div className="d-flex align-items-center gap-2">

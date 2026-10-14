@@ -116,3 +116,47 @@ h1, h2, h3, h4, h5, h6 {
     0 20px 50px -20px rgba(26, 122, 150, 0.22),
     0 2px 8px rgba(26, 122, 150, 0.06);
 }
+
+@keyframes fadeUp {
+  from {
+    opacity: 0;
+    transform: translateY(14px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.animate-in {
+  animation: fadeUp 0.8s ease both;
+}
+
+/* Chi ha attivato "riduci movimento" nel sistema operativo non vede l'animazione */
+@media (prefers-reduced-motion: reduce) {
+  .animate-in {
+    animation: none;
+  }
+}
+
+/* Navbar */
+.app-navbar {
+  background: #fff;
+  box-shadow: 0 2px 12px rgba(26, 122, 150, 0.08);
+}
+
+.brand-text {
+  font-family: "Outfit", sans-serif;
+  font-weight: 700;
+  color: var(--ge-primary);
+}
+
+.app-navbar .nav-link {
+  font-weight: 500;
+  color: var(--ge-text-muted);
+}
+
+.app-navbar .nav-link.active,
+.app-navbar .nav-link:hover {
+  color: var(--ge-primary);
+}
