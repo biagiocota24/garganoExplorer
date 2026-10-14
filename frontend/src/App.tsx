@@ -1,6 +1,6 @@
 import { useEffect } from "react";
 import { useAuthStore } from "./stores/authStore";
-import { Link, Route, Routes } from "react-router";
+import {  Route, Routes } from "react-router";
 import HomePage from "./pages/HomePage";
 import LoginPage from "./pages/LoginPage";
 import RegisterPage from "./pages/RegisterPage";
@@ -16,10 +16,6 @@ function App() {
   }, [loadCurrentUser]);
   return (
     <>
-      {/* <Link to={"/"}>Home</Link>
-      <Link to={"/login"}>login</Link>
-      <Link to={"/register"}>register</Link>
-      <Link to={"/profile"}>profile</Link> */}
       <Routes>
         <Route path="/login" element={<LoginPage />} />
         <Route path="/register" element={<RegisterPage />} />
