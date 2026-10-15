@@ -2,11 +2,13 @@ import { useState } from "react";
 import { useAuthStore } from "../stores/authStore";
 import { Link, useLocation, useNavigate } from "react-router";
 import { ApiError } from "../api/client";
+import AuthLayout from "../components/AuthLayout";
+import { Alert, Button, Form } from "react-bootstrap";
 
 const LoginPage = function () {
   const navigate = useNavigate();
   const location = useLocation();
-  const justRegistred = location.state?.registred === true;
+  const justRegistered = location.state?.registered === true;
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [error, setError] = useState<string | null>(null);
@@ -34,36 +36,45 @@ const LoginPage = function () {
   };
 
   return (
-    <>
-      {justRegistred && <p style={{color:"green"}}>Account creato , ora accedi</p>}
+    <AuthLayout>
+      <div>
+        <h2>Bentornato</h2>
+        <p className="text-secondary">Accedi al tuo account</p>
+      </div>
+      {justRegistered && (
+        <Alert variant="success">Account creato, ora accedi</Alert>
+      )}
+      {error !== null && <Alert variant="danger">{error}</Alert>}
 
-      <form onSubmit={handleSubmit}>
-        <label htmlFor="email">email</label>
-        <input
-          type="email"
-          value={email}
-          onChange={(e) => setEmail(e.target.value)}
-          id="email"
-          required
-          autoComplete="email"
-        />
-        <label htmlFor="password">password</label>
-        <input
-          type="password"
-          value={password}
-          onChange={(e) => setPassword(e.target.value)}
-          id="password"
-          required
-          autoComplete="current-password"
-        />
-        {error !== null && <p role="alert">{error}</p>}
-        <button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? "Accesso in corso" : "Accedi"}
-        </button>
-      </form>
-      <p>Non hai ancora un account ?</p>
-      <Link to={"/register"}>Registrati</Link>
-    </>
+      <Form onSubmit={handleSubmit} className="d-flex flex-column gap-3">
+        <Form.Group controlId="email">
+          <Form.Label>Email</Form.Label>
+          <Form.Control
+            type="email"
+            value={email}
+            onChange={(e) => setEmail(e.target.value)}
+            required
+            autoComplete="email"
+          />
+        </Form.Group>
+        <Form.Group controlId="password">
+          <Form.Label>Password</Form.Label>
+          <Form.Control
+            type="password"
+            value={password}
+            onChange={(e) => setPassword(e.target.value)}
+            required
+            autoComplete="current-password"
+          />
+        </Form.Group>
+        <Button type="submit" disabled={isSubmitting}>
+          {isSubmitting ? "Accesso in corso ..." : "Accedi"}
+        </Button>
+      </Form>
+      <p className="text-center mt-4 mb-0">
+        Non hai ancora un account? <Link to="/register">Registrati</Link>
+      </p>
+    </AuthLayout>
   );
 };
 
