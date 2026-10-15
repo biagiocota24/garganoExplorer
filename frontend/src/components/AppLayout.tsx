@@ -56,9 +56,9 @@ const AppLayout = () => {
                 <Nav.Link as={NavLink} to="/login">
                   Accedi
                 </Nav.Link>
-                <Button as={Link} to="/register" size="sm">
+                <Link to="/register" className="btn btn-primary btn-sm">
                   Registrati
-                </Button>
+                </Link>
               </Nav>
             )}
           </Navbar.Collapse>
