@@ -13,12 +13,14 @@ function AuthLayout({ children }: AuthLayoutProps) {
         <div className="d-flex align-items-center gap-2">
           <span className="auth-logo">🧭</span>
           <span className="fs-4 fw-bold" style={{ fontFamily: "Outfit" }}>
-            GarganoExplorer
+            Garga<span className="text-danger">no</span>
+            <span className="text-success">Yes</span>
           </span>
         </div>
-
         <div style={{ maxWidth: 460 }}>
-          <h1 className="auth-hero-title mb-3">Scopri il Gargano, un'onda alla volta.</h1>
+          <h1 className="auth-hero-title mb-3">
+            Scopri il Gargano, un'onda alla volta.
+          </h1>
           <p className="fs-5 opacity-75 mb-0">
             Spiagge, borghi e sentieri raccontati da chi vive il territorio.
           </p>
@@ -34,8 +36,12 @@ function AuthLayout({ children }: AuthLayoutProps) {
             {/* Logo, solo su mobile */}
             <div className="d-flex d-lg-none align-items-center gap-2 mb-4">
               <span className="auth-logo">🧭</span>
-              <span className="fw-bold" style={{ fontFamily: "Outfit", color: "var(--ge-primary)" }}>
-                GarganoExplorer
+              <span
+                className="fw-bold"
+                style={{ fontFamily: "Outfit", color: "var(--ge-primary)" }}
+              >
+                Garga<span className="text-danger">no</span>
+                <span className="text-success">Yes</span>
               </span>
             </div>
             {children}
