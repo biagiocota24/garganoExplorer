@@ -14,11 +14,12 @@ export class ApiError extends Error {
   }
 }
 
+const API_URL = import.meta.env.VITE_API_URL ?? "";
 export const request = async <T>(
   path: string,
   options: RequestInit = {},
 ): Promise<T> => {
-  const response = await fetch(path, {
+  const response = await fetch(API_URL + path, {
     ...options,
     credentials: "include",
     headers: {
@@ -36,7 +37,7 @@ export const request = async <T>(
       message = problem.detail ?? message;
       fieldErrors = problem.errors;
     } catch {
-        // risposta senza corpo JSON : resta il messaggio generico
+      // risposta senza corpo JSON : resta il messaggio generico
     }
 
     throw new ApiError(message, response.status, fieldErrors);
