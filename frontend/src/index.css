@@ -9,6 +9,8 @@
   --ge-bg: #f7fafb;
   --ge-tint: #eaf6f9;
   --ge-gradient: linear-gradient(135deg, #1a7a96, #00a8d8);
+  --ge-gradient-danger: linear-gradient(135deg, #d93f45, #ff6b6b);
+  --ge-gradient-success: linear-gradient(135deg, #1f8f52, #34c47a);
 
   /* 2. Le variabili di Bootstrap, collegate ai nostri valori */
   --bs-body-font-family: "Inter", sans-serif;
@@ -28,32 +30,107 @@
 }
 
 /* 3. Titoli in Outfit */
-h1, h2, h3, h4, h5, h6 {
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
   font-family: "Outfit", sans-serif;
   font-weight: 700;
   color: var(--ge-text);
 }
 
-/* 4. Pulsante principale: Bootstrap usa variabili proprie per i pulsanti */
+/* ===== Pulsanti: base comune ===== */
+.btn {
+  --bs-btn-padding-y: 0.7rem;
+  --bs-btn-padding-x: 1.25rem;
+  --bs-btn-font-family: "Outfit", sans-serif;
+  --bs-btn-font-weight: 600;
+  --bs-btn-border-radius: 14px;
+  --bs-btn-focus-box-shadow: 0 0 0 4px rgba(0, 168, 216, 0.25);
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.3s ease,
+    background-color 0.2s ease;
+}
+
+.btn:hover:not(:disabled) {
+  transform: translateY(-2px);
+}
+
+.btn:active:not(:disabled) {
+  transform: translateY(0);
+}
+
+/* Le taglie vanno ridefinite: le nostre regole su .btn
+   verrebbero altrimenti prima di quelle di Bootstrap */
+.btn-sm {
+  --bs-btn-padding-y: 0.4rem;
+  --bs-btn-padding-x: 0.9rem;
+  --bs-btn-border-radius: 10px;
+  --bs-btn-font-size: 0.875rem;
+}
+
+.btn-lg {
+  --bs-btn-padding-y: 0.9rem;
+  --bs-btn-padding-x: 1.6rem;
+  --bs-btn-border-radius: 16px;
+  --bs-btn-font-size: 1.1rem;
+}
+
+/* ===== Varianti a sfumatura ===== */
+.btn-primary,
+.btn-danger,
+.btn-success {
+  --bs-btn-color: #fff;
+  --bs-btn-hover-color: #fff;
+  --bs-btn-active-color: #fff;
+  --bs-btn-disabled-color: #fff;
+  --bs-btn-border-color: transparent;
+  --bs-btn-hover-border-color: transparent;
+  --bs-btn-active-border-color: transparent;
+  --bs-btn-disabled-border-color: transparent;
+  --bs-btn-disabled-opacity: 0.6;
+}
+
+/* Blu: azione principale */
 .btn-primary {
   --bs-btn-bg: var(--ge-primary);
-  --bs-btn-border-color: transparent;
   --bs-btn-hover-bg: var(--ge-primary);
-  --bs-btn-hover-border-color: transparent;
   --bs-btn-active-bg: var(--ge-primary);
   --bs-btn-disabled-bg: var(--ge-primary);
-  --bs-btn-disabled-border-color: transparent;
   background-image: var(--ge-gradient);
-  border-radius: 14px;
-  padding: 0.85rem 1rem;
-  font-family: "Outfit", sans-serif;
-  font-weight: 600;
   box-shadow: 0 10px 24px -8px rgba(26, 122, 150, 0.55);
-  transition: transform 0.2s ease, box-shadow 0.3s ease;
 }
 .btn-primary:hover:not(:disabled) {
-  transform: translateY(-2px);
   box-shadow: 0 14px 28px -8px rgba(26, 122, 150, 0.6);
+}
+
+/* Rosso: azioni distruttive (eliminare, annullare) */
+.btn-danger {
+  --bs-btn-bg: #d93f45;
+  --bs-btn-hover-bg: #d93f45;
+  --bs-btn-active-bg: #d93f45;
+  --bs-btn-disabled-bg: #d93f45;
+  background-image: var(--ge-gradient-danger);
+  box-shadow: 0 10px 24px -8px rgba(217, 63, 69, 0.5);
+}
+.btn-danger:hover:not(:disabled) {
+  box-shadow: 0 14px 28px -8px rgba(217, 63, 69, 0.55);
+}
+
+/* Verde: conferme (salvare, pubblicare) */
+.btn-success {
+  --bs-btn-bg: #1f8f52;
+  --bs-btn-hover-bg: #1f8f52;
+  --bs-btn-active-bg: #1f8f52;
+  --bs-btn-disabled-bg: #1f8f52;
+  background-image: var(--ge-gradient-success);
+  box-shadow: 0 10px 24px -8px rgba(31, 143, 82, 0.5);
+}
+.btn-success:hover:not(:disabled) {
+  box-shadow: 0 14px 28px -8px rgba(31, 143, 82, 0.55);
 }
 
 /* 5. Campi dei form */
@@ -76,7 +153,6 @@ h1, h2, h3, h4, h5, h6 {
   border-color: var(--ge-accent);
   box-shadow: 0 0 0 4px rgba(0, 168, 216, 0.12);
 }
-
 
 /* Pagine di accesso */
 .auth-hero {
@@ -194,4 +270,19 @@ h1, h2, h3, h4, h5, h6 {
   border-radius: 999px;
   padding: 0.35rem 0.75rem;
   font-size: 0.8rem;
+}
+
+/* Home */
+.home-hero {
+  border-radius: 24px;
+  padding: clamp(2rem, 6vw, 4.5rem);
+  color: #fff;
+  background:
+    linear-gradient(160deg, rgba(20, 90, 120, 0.9), rgba(0, 150, 190, 0.7)),
+    url("/gargano.jpg") center / cover;
+}
+
+.home-hero .lead {
+  max-width: 560px;
+  opacity: 0.85;
 }
