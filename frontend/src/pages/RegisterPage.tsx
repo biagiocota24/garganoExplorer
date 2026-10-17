@@ -1,5 +1,5 @@
 import { Link, useNavigate } from "react-router";
-import type { AccounType } from "../api/auth";
+import type { AccountType } from "../api/auth";
 import { useState } from "react";
 import * as auth from "../api/auth";
 import { ApiError } from "../api/client";
@@ -19,7 +19,7 @@ const RegisterPage = function () {
   const [password, setPassword] = useState("");
   const [firstName, setFirstName] = useState("");
   const [lastName, setLastName] = useState("");
-  const [accountType, setAccountType] = useState<AccounType>("VISITOR");
+  const [accountType, setAccountType] = useState<AccountType>("VISITOR");
 
   const handleRegister = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -116,7 +116,7 @@ const RegisterPage = function () {
           <Form.Label>Tipo di account</Form.Label>
           <Form.Select
             value={accountType}
-            onChange={(e) => setAccountType(e.target.value as AccounType)}
+            onChange={(e) => setAccountType(e.target.value as AccountType)}
           >
             <option value="VISITOR">Visitatore</option>
             <option value="OWNER">Gestore</option>
