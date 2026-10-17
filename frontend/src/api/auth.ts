@@ -1,7 +1,7 @@
 import { request } from "./client";
 
 export type Role = "VISITOR" | "OWNER" | "ADMIN";
-export type AccounType = "VISITOR" | "OWNER";
+export type AccountType = "VISITOR" | "OWNER";
 
 export type User = {
   id: string;
@@ -17,7 +17,7 @@ export type RegisterRequest = {
   password: string;
   firstName: string;
   lastName: string;
-  accountType: AccounType;
+  accountType: AccountType;
 };
 
 export type LoginRequest = {
