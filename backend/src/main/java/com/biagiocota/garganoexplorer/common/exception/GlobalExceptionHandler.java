@@ -1,5 +1,6 @@
 package com.biagiocota.garganoexplorer.common.exception;
 
+import com.biagiocota.garganoexplorer.attraction.AttractionNotFoundException;
 import com.biagiocota.garganoexplorer.auth.EmailAlreadyUsedException;
 import com.biagiocota.garganoexplorer.auth.InvalidCredentialsException;
 import com.biagiocota.garganoexplorer.user.UserNotFoundException;
@@ -9,9 +10,11 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ProblemDetail;
 import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.validation.FieldError;
+import org.springframework.web.ErrorResponse;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
+import org.springframework.web.method.annotation.MethodArgumentTypeMismatchException;
 
 import java.util.HashMap;
 import java.util.Map;
@@ -56,6 +59,9 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(Exception.class)
     public ProblemDetail handleException(Exception ex) {
+        if (ex instanceof ErrorResponse errorResponse) {
+            return errorResponse.getBody();
+        }
         log.error("Errore non gestito", ex);
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, "Errore nel server");
         problem.setTitle("Errore interno del Server");
@@ -75,4 +81,19 @@ public class GlobalExceptionHandler {
         problem.setTitle("Credenziali non valide");
         return problem;
     }
+
+    @ExceptionHandler(MethodArgumentTypeMismatchException.class)
+    public ProblemDetail handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException ex) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Valore non valido: " + ex.getName());
+        problem.setTitle("Parametro non vaido");
+        return problem;
+    }
+
+    @ExceptionHandler(AttractionNotFoundException.class)
+    public ProblemDetail handleAttractionNotFound(AttractionNotFoundException ex) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
+        problem.setTitle("Attrazione non trovatax");
+        return problem;
+    }
+
 }
