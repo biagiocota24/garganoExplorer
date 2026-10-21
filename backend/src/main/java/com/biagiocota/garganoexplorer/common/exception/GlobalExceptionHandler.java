@@ -1,5 +1,6 @@
 package com.biagiocota.garganoexplorer.common.exception;
 
+import com.biagiocota.garganoexplorer.attraction.AttractionNotFoundException;
 import com.biagiocota.garganoexplorer.auth.EmailAlreadyUsedException;
 import com.biagiocota.garganoexplorer.auth.InvalidCredentialsException;
 import com.biagiocota.garganoexplorer.user.UserNotFoundException;
@@ -85,6 +86,13 @@ public class GlobalExceptionHandler {
     public ProblemDetail handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException ex) {
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Valore non valido: " + ex.getName());
         problem.setTitle("Parametro non vaido");
+        return problem;
+    }
+
+    @ExceptionHandler(AttractionNotFoundException.class)
+    public ProblemDetail handleAttractionNotFound(AttractionNotFoundException ex) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
+        problem.setTitle("Attrazione non trovatax");
         return problem;
     }
 
