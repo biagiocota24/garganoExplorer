@@ -8,6 +8,7 @@ import RequireAuth from "./components/RequireAuth";
 import ProfilePage from "./pages/ProfilePage";
 import AppLayout from "./components/AppLayout";
 import AttractionsPage from "./pages/AttractionsPage";
+import AttractionDetailsPage from "./pages/AttractionDetailsPage";
 
 function App() {
   const loadCurrentUser = useAuthStore((state) => state.loadCurrentUser);
@@ -23,6 +24,7 @@ function App() {
         <Route element={<AppLayout />}>
           <Route path="/" element={<HomePage />} />
           <Route path="/attractions" element={<AttractionsPage />} />
+          <Route path="/attractions/:id" element={<AttractionDetailsPage />} />
           <Route element={<RequireAuth />}>
             <Route path="/profile" element={<ProfilePage />} />
           </Route>

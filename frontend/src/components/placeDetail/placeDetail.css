@@ -1,0 +1,258 @@
+/* ---------- Place detail ---------- */
+.place-detail {
+  --media-height: clamp(240px, 62vw, 400px);
+  max-width: 1140px;
+  margin-inline: auto;
+}
+
+.place-detail__back {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4rem;
+  margin-bottom: 1rem;
+  color: var(--ge-primary);
+  font-weight: 600;
+  text-decoration: none;
+}
+
+.place-detail__back:hover {
+  text-decoration: underline;
+}
+
+/* Zona foto: copertina + miniature */
+.place-detail__media {
+  display: flex;
+  flex-direction: column;
+}
+
+.place-detail__hero {
+  position: relative;
+  min-height: var(--media-height);
+  border-radius: 1.25rem;
+  overflow: hidden;
+  background: var(--cover, var(--ge-gradient));
+  color: #fff;
+}
+
+.place-detail__photo {
+  display: block;
+  width: 100%;
+  height: var(--media-height);
+  object-fit: cover;
+}
+
+/* Frecce del carosello: cerchi scuri visibili su qualsiasi foto */
+.place-detail__carousel .carousel-control-prev,
+.place-detail__carousel .carousel-control-next {
+  width: auto;
+  padding: 0 1rem;
+  opacity: 1;
+  z-index: 3;
+}
+
+.place-detail__carousel .carousel-control-prev-icon,
+.place-detail__carousel .carousel-control-next-icon {
+  width: 2.75rem;
+  height: 2.75rem;
+  border-radius: 50%;
+  background-color: rgba(10, 25, 32, 0.45);
+  background-size: 45%;
+  transition: background-color 0.2s ease;
+}
+
+.place-detail__carousel .carousel-control-prev:hover .carousel-control-prev-icon,
+.place-detail__carousel .carousel-control-next:hover .carousel-control-next-icon {
+  background-color: rgba(10, 25, 32, 0.7);
+}
+
+/* Sfumatura scura in basso: titolo leggibile anche su foto chiare */
+.place-detail__hero::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+  background: linear-gradient(to top, rgba(10, 25, 32, 0.7), rgba(10, 25, 32, 0) 55%);
+  pointer-events: none;
+  z-index: 1;
+}
+
+.place-detail__hero-content {
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  padding: clamp(1.25rem, 3vw, 2.25rem);
+  pointer-events: none;
+}
+
+.place-detail__counter {
+  position: absolute;
+  top: 1rem;
+  right: 1rem;
+  z-index: 2;
+  padding: 0.3rem 0.75rem;
+  border-radius: 999px;
+  background: rgba(10, 25, 32, 0.55);
+  font-size: 0.85rem;
+  font-weight: 600;
+}
+
+.place-detail__badge {
+  display: inline-block;
+  margin-bottom: 0.75rem;
+  padding: 0.3rem 0.8rem;
+  border-radius: 999px;
+  background: rgba(255, 255, 255, 0.92);
+  color: #1d2b33;
+  font-size: 0.8rem;
+  font-weight: 600;
+}
+
+.place-detail__title {
+  margin: 0;
+  color: #fff;
+  font-size: clamp(1.8rem, 5vw, 2.6rem);
+  line-height: 1.15;
+  text-shadow: 0 2px 12px rgba(0, 0, 0, 0.25);
+}
+
+.place-detail__subtitle {
+  margin: 0.4rem 0 0;
+  font-size: 1rem;
+  font-weight: 600;
+  letter-spacing: 0.08em;
+  text-transform: uppercase;
+  opacity: 0.9;
+}
+
+/* Miniature: striscia orizzontale su mobile e tablet */
+.place-detail__thumbs {
+  display: flex;
+  gap: 0.6rem;
+  margin-top: 0.75rem;
+  padding-bottom: 0.25rem;
+  overflow-x: auto;
+  scroll-snap-type: x mandatory;
+  scrollbar-width: thin;
+}
+
+.place-detail__thumb {
+  flex: 0 0 auto;
+  width: 96px;
+  aspect-ratio: 4 / 3;
+  padding: 0;
+  border: 2px solid transparent;
+  border-radius: 0.6rem;
+  overflow: hidden;
+  background: none;
+  opacity: 0.6;
+  scroll-snap-align: start;
+  transition: opacity 0.2s ease, border-color 0.2s ease;
+}
+
+.place-detail__thumb img {
+  display: block;
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.place-detail__thumb:hover,
+.place-detail__thumb.is-active {
+  opacity: 1;
+}
+
+.place-detail__thumb.is-active {
+  border-color: var(--ge-primary);
+}
+
+.place-detail__thumb:focus-visible {
+  outline: 3px solid var(--ge-accent);
+  outline-offset: 2px;
+}
+
+/* Pannelli sotto la zona foto */
+.place-detail__panel {
+  padding: clamp(1.25rem, 2.5vw, 1.75rem);
+  background: #fff;
+  border: 1px solid var(--bs-border-color);
+  border-radius: 1rem;
+}
+
+.place-detail__section-title {
+  margin-bottom: 0.9rem;
+  font-size: 1.15rem;
+}
+
+.place-detail__description {
+  margin: 0;
+  max-width: 70ch;
+  font-size: 1.05rem;
+  line-height: 1.75;
+  white-space: pre-line;
+}
+
+.place-detail__aside {
+  position: sticky;
+  top: 1.5rem;
+}
+
+/* Lista informazioni nella colonna laterale */
+.info-list {
+  display: grid;
+  gap: 0.9rem;
+  margin: 0;
+}
+
+.info-list dt {
+  color: var(--bs-secondary-color);
+  font-size: 0.75rem;
+  font-weight: 600;
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+}
+
+.info-list dd {
+  margin: 0.15rem 0 0;
+  font-weight: 500;
+}
+
+/* Desktop: foto a sinistra, griglia di miniature a destra */
+@media (min-width: 992px) {
+  .place-detail {
+    --media-height: 460px;
+  }
+
+  .place-detail__media.has-thumbs {
+    display: grid;
+    grid-template-columns: minmax(0, 1fr) 232px;
+    gap: 0.75rem;
+  }
+
+  .place-detail__media.has-thumbs .place-detail__thumbs {
+    display: grid;
+    grid-template-columns: repeat(2, 1fr);
+    align-content: start;
+    gap: 0.6rem;
+    margin-top: 0;
+    max-height: var(--media-height);
+    overflow-x: hidden;
+    overflow-y: auto;
+    scroll-snap-type: y mandatory;
+  }
+
+  .place-detail__media.has-thumbs .place-detail__thumb {
+    width: 100%;
+  }
+
+  .place-detail__title {
+    font-size: clamp(2rem, 2.6vw, 2.5rem);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .place-detail__carousel .carousel-item,
+  .place-detail__thumb {
+    transition: none;
+  }
+}
