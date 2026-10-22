@@ -26,6 +26,9 @@ const AttractionsPage = () => {
   const category = searchParams.get("category") as AttractionCategory | null;
   const hasFilters = Boolean(town || category);
 
+  const pageParam = Number(searchParams.get("page"));
+  const page = pageParam > 1 ? pageParam - 1 : 0;
+
   const updateFilter = (key: string, value: string) => {
     const next = new URLSearchParams(searchParams);
     if (value) {
@@ -43,16 +46,29 @@ const AttractionsPage = () => {
     setSearchParams({});
   };
 
+  const goToPage = (index: number) => {
+    const next = new URLSearchParams(searchParams);
+    if (index === 0) {
+      next.delete("page");
+    } else {
+      next.set("page", (index + 1).toString());
+    }
+    setStatus("loading");
+    setSearchParams(next);
+    window.scrollTo({ top: 0, behavior: "smooth" });
+  };
+
   useEffect(() => {
     let ignore = false;
     const loadAttractions = async () => {
       try {
-        const page = await getAttractions({
+        const result = await getAttractions({
           town: town ?? undefined,
           category: category ?? undefined,
+          page,
         });
         if (ignore) return;
-        setData(page);
+        setData(result);
         setStatus("success");
       } catch {
         if (ignore) return;
@@ -64,7 +80,7 @@ const AttractionsPage = () => {
     return () => {
       ignore = true;
     };
-  }, [town, category]);
+  }, [town, category, page]);
 
   return (
     <>
@@ -164,20 +180,43 @@ const AttractionsPage = () => {
       )}
 
       {status === "success" && data && data.content.length > 0 && (
-        <Row xs={1} sm={2} md={3} xl={4} className="g-4">
-          {data.content.map((a) => (
-            <Col key={a.id}>
-              <PlaceCard
-                to={`/attractions/${a.id}`}
-                title={a.name}
-                subtitle={townTranslations[a.town]}
-                badge={attractionCategoryTranslations[a.category]}
-                description={a.description}
-                tone={a.category}
-              />
-            </Col>
-          ))}
-        </Row>
+        <>
+          <Row xs={1} sm={2} md={3} xl={4} className="g-4">
+            {data.content.map((a) => (
+              <Col key={a.id}>
+                <PlaceCard
+                  to={`/attractions/${a.id}`}
+                  title={a.name}
+                  subtitle={townTranslations[a.town]}
+                  badge={attractionCategoryTranslations[a.category]}
+                  description={a.description}
+                  tone={a.category}
+                />
+              </Col>
+            ))}
+          </Row>
+          {data.page.totalPages > 1 && (
+            <div className="d-flex justify-content-center align-items-center gap-3 mt-4">
+              <Button
+                variant="outline-primary"
+                disabled={page === 0}
+                onClick={() => goToPage(page - 1)}
+              >
+                Pagina precedente
+              </Button>
+              <span>
+                Pagina {data.page.number + 1} di {data.page.totalPages}
+              </span>
+              <Button
+                variant="outline-primary"
+                disabled={page + 1 >= data.page.totalPages}
+                onClick={() => goToPage(page + 1)}
+              >
+                Pagina successiva
+              </Button>
+            </div>
+          )}
+        </>
       )}
     </>
   );
