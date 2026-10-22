@@ -41,6 +41,13 @@ h6 {
   color: var(--ge-text);
 }
 
+.text-s{
+  font-size: 0.9rem;
+}
+.text-xs{
+  font-size: 0.75rem;
+}
+
 /* ===== Pulsanti: base comune ===== */
 .btn {
   --bs-btn-padding-y: 0.7rem;
@@ -286,3 +293,4 @@ h6 {
   max-width: 560px;
   opacity: 0.85;
 }
+
