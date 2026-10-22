@@ -1,4 +1,4 @@
-import type { Town, AttractionCategory } from "./types";
+import type { AttractionCategory, Town } from "../api/attraction";
 
 export const townTranslations: Record<Town, string> = {
   VIESTE: "Vieste",

@@ -68,6 +68,16 @@ const AppLayout = () => {
               >
                 Home
               </Nav.Link>
+              <Nav.Link
+                as={NavLink}
+                to="/attractions"
+                end
+                onClick={() => {
+                  setExpanded(false);
+                }}
+              >
+                Attrazioni
+              </Nav.Link>
             </Nav>
 
             {/* Parte destra: dipende da chi è loggato */}
@@ -101,7 +111,7 @@ const AppLayout = () => {
       </Navbar>
 
       <main className="py-4">
-        <Container className="animate-in">
+        <Container fluid className="animate-in">
           <Outlet />
         </Container>
       </main>
