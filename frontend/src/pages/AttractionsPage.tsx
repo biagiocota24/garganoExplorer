@@ -13,9 +13,11 @@ import {
   townTranslations,
 } from "../constants/labels";
 import PlaceCard from "../components/placeCard/PlaceCard";
-import { useSearchParams } from "react-router";
+import { NavLink, useSearchParams } from "react-router";
+import { useAuthStore } from "../stores/authStore";
 
 const AttractionsPage = () => {
+  const isAdmin = useAuthStore((state) => state.user?.role === "ADMIN");
   const [data, setData] = useState<Page<Attraction> | null>(null);
   const [status, setStatus] = useState<"loading" | "success" | "error">(
     "loading",
@@ -84,14 +86,19 @@ const AttractionsPage = () => {
 
   return (
     <>
-      <div className="mb-3">
-        <h1 className="mb-0">Attrazioni</h1>
-        <span className="fw-semibold">
-          Scegli un comune o una categoria e trova la tua prossima tappa
-        </span>
+      <div className="d-flex justify-content-between align-items-center flex-wrap gap-3">
+        <div className="mb-3">
+          <h1 className="mb-0">Attrazioni</h1>
+          <span className="fw-semibold">
+            Scegli un comune o una categoria e trova la tua prossima tappa
+          </span>
+        </div>
+        {isAdmin && (
+          <NavLink to="/admin/attractions/new" className="btn btn-outline-primary">+ Nuova Attrazione</NavLink>
+        )}
       </div>
 
-      <Row className="g-2 align-items-center mb-4">
+      <Row className="g-2 align-items-center my-2">
         <Col xs={12} md={4}>
           <Form.Select
             aria-label="Filtra per comune"
