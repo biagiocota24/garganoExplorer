@@ -1,6 +1,7 @@
 import { useState, type ReactNode } from "react";
 import { Link } from "react-router";
 import { Carousel, Col, Row } from "react-bootstrap";
+import "./placeDetail.css"
 
 type Props = {
   title: string;
