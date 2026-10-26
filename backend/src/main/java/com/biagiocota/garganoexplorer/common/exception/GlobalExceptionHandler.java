@@ -3,6 +3,7 @@ package com.biagiocota.garganoexplorer.common.exception;
 import com.biagiocota.garganoexplorer.attraction.AttractionNotFoundException;
 import com.biagiocota.garganoexplorer.auth.EmailAlreadyUsedException;
 import com.biagiocota.garganoexplorer.auth.InvalidCredentialsException;
+import com.biagiocota.garganoexplorer.business.BusinessNotFoundException;
 import com.biagiocota.garganoexplorer.user.UserNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -93,6 +94,20 @@ public class GlobalExceptionHandler {
     public ProblemDetail handleAttractionNotFound(AttractionNotFoundException ex) {
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
         problem.setTitle("Attrazione non trovatax");
+        return problem;
+    }
+
+    @ExceptionHandler(BusinessNotFoundException.class)
+    public ProblemDetail handleBusinessNotFound(BusinessNotFoundException ex) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
+        problem.setTitle("Attività non trovata");
+        return problem;
+    }
+
+    @ExceptionHandler(ForbiddenOperationException.class)
+    public  ProblemDetail handleForribiddenOperationException(ForbiddenOperationException ex){
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN , ex.getMessage());
+        problem.setTitle("Tentativo contato del server non autorizzato");
         return problem;
     }
 
