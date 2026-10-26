@@ -1,19 +1,9 @@
-package com.biagiocota.garganoexplorer.auth;
+package com.biagiocota.garganoexplorer;
 
-import com.biagiocota.garganoexplorer.TestContainerConfiguration;
 import com.biagiocota.garganoexplorer.user.Role;
-import com.biagiocota.garganoexplorer.user.User;
-import com.biagiocota.garganoexplorer.user.UserRepository;
 import jakarta.servlet.http.Cookie;
 import org.junit.jupiter.api.Test;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.boot.test.context.SpringBootTest;
-import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
-import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.test.web.servlet.MockMvc;
-import org.springframework.test.web.servlet.MvcResult;
 
 import static org.springframework.test.web.servlet.request.MockMvcRequestBuilders.post;
 import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.jsonPath;
@@ -22,21 +12,9 @@ import static org.springframework.test.web.servlet.request.MockMvcRequestBuilder
 
 import java.util.UUID;
 
-@SpringBootTest
-@AutoConfigureMockMvc
-@Import(TestContainerConfiguration.class)
-public class AttractionFlowIntegrationTest {
 
-    @Autowired
-    private MockMvc mockMvc;
+public class AttractionFlowIntegrationTest extends IntegrationTestSupport {
 
-    @Autowired
-    private UserRepository userRepository;
-
-    @Autowired
-    private PasswordEncoder passwordEncoder;
-
-    private static final String PASSWORD = "password123";
     private static final String VALID_BODY = """
             {
               "name": "Baia delle Zagare",
@@ -54,30 +32,7 @@ public class AttractionFlowIntegrationTest {
             }
             """;
 
-    private String createUser(Role role) {
-        User user = new User();
-        String emailGenerated = "admin-" + UUID.randomUUID() + "@test.com";
-        user.setEmail(emailGenerated);
-        user.setPassword(passwordEncoder.encode(PASSWORD));
-        user.setFirstName("Flow");
-        user.setLastName("Test");
-        user.setRole(role);
-        userRepository.saveAndFlush(user);
-        return emailGenerated;
-    }
 
-    private Cookie loginAs(String email) throws Exception {
-        String body = """
-                {"email":"%s",
-                "password":"%s"}
-                """.formatted(email, PASSWORD);
-        MvcResult result = mockMvc.perform(post("/api/auth/login")
-                        .contentType(MediaType.APPLICATION_JSON)
-                        .content(body))
-                .andExpect(status().isOk())
-                .andReturn();
-        return result.getResponse().getCookie("access_token");
-    }
 
     @Test
     void creatAsVisitorReturn403() throws Exception {

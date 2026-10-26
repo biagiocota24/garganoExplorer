@@ -9,11 +9,19 @@ public final class TextNormalizerTools {
 
 
     public static String email(String email) {
-        return email.toLowerCase(Locale.ROOT).trim();
+        String cleaned = blankToNull(email);
+        return cleaned == null? null : cleaned.toLowerCase(Locale.ROOT).trim();
     }
 
     public static String name(String name) {
         return name.trim().replaceAll("\\s+", " ");
+    }
+
+    public static String blankToNull(String text){
+        if(text == null || text.isBlank()){
+            return null;
+        }
+        return text.trim();
     }
 }
 
