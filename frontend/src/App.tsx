@@ -9,8 +9,9 @@ import ProfilePage from "./pages/ProfilePage";
 import AppLayout from "./components/AppLayout";
 import AttractionsPage from "./pages/AttractionsPage";
 import AttractionDetailsPage from "./pages/AttractionDetailsPage";
-import RequireAdmin from "./components/RequireAdmin";
 import AttractionFormPage from "./pages/AttractionFormPage";
+import RequireRole from "./components/RequireRole";
+import BusinessesPage from "./pages/BusinessesPage";
 
 function App() {
   const loadCurrentUser = useAuthStore((state) => state.loadCurrentUser);
@@ -27,10 +28,11 @@ function App() {
           <Route path="/" element={<HomePage />} />
           <Route path="/attractions" element={<AttractionsPage />} />
           <Route path="/attractions/:id" element={<AttractionDetailsPage />} />
+          <Route path="/businesses" element={<BusinessesPage />} />
           <Route element={<RequireAuth />}>
             <Route path="/profile" element={<ProfilePage />} />
           </Route>
-          <Route element={<RequireAdmin />}>
+          <Route element={<RequireRole roles={["ADMIN"]} />}>
             <Route
               path="/admin/attractions/new"
               element={<AttractionFormPage />}
@@ -39,6 +41,8 @@ function App() {
               path="/admin/attractions/:id/edit"
               element={<AttractionFormPage />}
             />
+          </Route>
+          <Route element={<RequireRole roles={["OWNER"]} />}>
           </Route>
         </Route>
       </Routes>

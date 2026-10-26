@@ -11,10 +11,10 @@ import {
   updateAttraction,
   type AttractionCategory,
   type AttractionRequest,
-  type Town,
 } from "../api/attraction";
 import { ApiError } from "../api/client";
 import LoadingSpinner from "../components/Loadingspinner";
+import type { Town } from "../api/types";
 
 const MIN_DESCRIPTION = 200;
 const MAX_DESCRIPTION = 5000;

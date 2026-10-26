@@ -3,8 +3,6 @@ import {
   getAttractions,
   type Attraction,
   type AttractionCategory,
-  type Page,
-  type Town,
 } from "../api/attraction";
 import { Alert, Button, Col, Form, Row } from "react-bootstrap";
 import LoadingSpinner from "../components/Loadingspinner";
@@ -15,6 +13,7 @@ import {
 import PlaceCard from "../components/placeCard/PlaceCard";
 import { NavLink, useSearchParams } from "react-router";
 import { useAuthStore } from "../stores/authStore";
+import type { Page, Town } from "../api/types";
 
 const AttractionsPage = () => {
   const isAdmin = useAuthStore((state) => state.user?.role === "ADMIN");
@@ -189,7 +188,7 @@ const AttractionsPage = () => {
       {status === "success" && data && data.content.length > 0 && (
         <>
           <Row xs={1} sm={2} md={3} xl={4} className="g-4">
-            {data.content.map((a) => (
+            {data.content.map((a:Attraction) => (
               <Col key={a.id}>
                 <PlaceCard
                   to={`/attractions/${a.id}`}

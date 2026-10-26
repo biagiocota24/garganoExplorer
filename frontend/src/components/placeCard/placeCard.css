@@ -11,7 +11,9 @@
   color: inherit;
   text-decoration: none;
   box-shadow: 0 1px 2px rgba(16, 42, 51, 0.05);
-  transition: transform 0.2s ease, box-shadow 0.2s ease;
+  transition:
+    transform 0.2s ease,
+    box-shadow 0.2s ease;
 }
 
 .place-card:hover {
@@ -26,15 +28,63 @@
 }
 
 /* Colori di riserva quando manca la foto: attrazioni */
-.place-card[data-tone="BEACH"]           { --cover: linear-gradient(135deg, #00a8d8, #1a7a96); }
-.place-card[data-tone="CHURCH"]          { --cover: linear-gradient(135deg, #c9a46a, #8a6a3b); }
-.place-card[data-tone="TRAIL"]           { --cover: linear-gradient(135deg, #6fb07a, #2f6b45); }
-.place-card[data-tone="HISTORIC_CENTER"] { --cover: linear-gradient(135deg, #e3a76f, #b5653a); }
-.place-card[data-tone="VIEWPOINT"]       { --cover: linear-gradient(135deg, #f2b84b, #e07a3f); }
-.place-card[data-tone="NATURE_RESERVE"]  { --cover: linear-gradient(135deg, #4fb39a, #1f6f63); }
-.place-card[data-tone="MUSEUM"]          { --cover: linear-gradient(135deg, #8f86c9, #4f4a8a); }
-.place-card[data-tone="CAVE"]            { --cover: linear-gradient(135deg, #6b7c8f, #2f3a48); }
-/* Qui aggiungerai i colori per le categorie delle strutture (HOTEL, RESTAURANT, ...) */
+.place-card[data-tone="BEACH"] {
+  --cover: linear-gradient(135deg, #00a8d8, #1a7a96);
+}
+.place-card[data-tone="CHURCH"] {
+  --cover: linear-gradient(135deg, #c9a46a, #8a6a3b);
+}
+.place-card[data-tone="TRAIL"] {
+  --cover: linear-gradient(135deg, #6fb07a, #2f6b45);
+}
+.place-card[data-tone="HISTORIC_CENTER"] {
+  --cover: linear-gradient(135deg, #e3a76f, #b5653a);
+}
+.place-card[data-tone="VIEWPOINT"] {
+  --cover: linear-gradient(135deg, #f2b84b, #e07a3f);
+}
+.place-card[data-tone="NATURE_RESERVE"] {
+  --cover: linear-gradient(135deg, #4fb39a, #1f6f63);
+}
+.place-card[data-tone="MUSEUM"] {
+  --cover: linear-gradient(135deg, #8f86c9, #4f4a8a);
+}
+.place-card[data-tone="CAVE"] {
+  --cover: linear-gradient(135deg, #6b7c8f, #2f3a48);
+}
+
+
+/* Attività commerciali */
+[data-tone="HOTEL"] {
+  --cover: linear-gradient(135deg, #5b7fd6, #2f4a99);
+}
+[data-tone="BED_AND_BREAKFAST"] {
+  --cover: linear-gradient(135deg, #e59ab0, #b3546f);
+}
+[data-tone="HOLIDAY_HOME"] {
+  --cover: linear-gradient(135deg, #f0a868, #c2683a);
+}
+[data-tone="VILLAGE"] {
+  --cover: linear-gradient(135deg, #48c1b5, #1d7d74);
+}
+[data-tone="CAMPING"] {
+  --cover: linear-gradient(135deg, #8fbf5a, #4a7a2a);
+}
+[data-tone="AGRITURISMO"] {
+  --cover: linear-gradient(135deg, #b9a15c, #7a6430);
+}
+[data-tone="RESTAURANT"] {
+  --cover: linear-gradient(135deg, #e5735e, #a83c2b);
+}
+[data-tone="BEACH_CLUB"] {
+  --cover: linear-gradient(135deg, #f5c74f, #e2973a);
+}
+[data-tone="BOAT_TOUR"] {
+  --cover: linear-gradient(135deg, #2fb6e0, #0b6e99);
+}
+[data-tone="EXCURSION"] {
+  --cover: linear-gradient(135deg, #7fae8a, #3e6b4f);
+}
 
 .place-card__cover {
   position: relative;
