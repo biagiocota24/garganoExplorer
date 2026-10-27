@@ -54,9 +54,9 @@ public class BusinessService {
     }
 
     @Transactional
-    public BusinessResponse updateBusiness(UUID id , UUID currentUserId , boolean isAdmin , BusinessRequest request){
+    public BusinessResponse updateBusiness(UUID id , UUID currentUserId, BusinessRequest request){
         Business businessToUpdate = businessRepository.findById(id).orElseThrow(BusinessNotFoundException::new);
-        checkCanModify(businessToUpdate , currentUserId , isAdmin);
+        checkIsOwner(businessToUpdate , currentUserId);
         applyRequest(businessToUpdate , request);
         businessRepository.flush();
         return BusinessResponse.from(businessToUpdate);
@@ -65,7 +65,7 @@ public class BusinessService {
     @Transactional
     public void deleteBusiness(UUID id , UUID currentUserId, boolean isAdmin){
         Business businessToDelete = businessRepository.findById(id).orElseThrow(BusinessNotFoundException::new);
-        checkCanModify(businessToDelete , currentUserId ,isAdmin);
+        checkCanDelete(businessToDelete , currentUserId ,isAdmin);
         businessRepository.delete(businessToDelete);
     }
 
@@ -84,10 +84,18 @@ public class BusinessService {
         business.setPriceRange(request.priceRange());
     }
 
-    private void checkCanModify(Business business , UUID currentUserId , boolean isAdmin){
+
+    private void checkIsOwner(Business business , UUID currentUserId){
         boolean isOwner = business.getOwner().getId().equals(currentUserId);
-        if (!isAdmin && !isOwner){
-            throw new ForbiddenOperationException("Non hai i permessi per gestire questa attività");
+        if(!isOwner){
+            throw new ForbiddenOperationException("Puoi modificare solo le tue attività");
+        }
+    }
+
+    private void checkCanDelete(Business business , UUID currentUserId , boolean isAdmin){
+        boolean isOwner = business.getOwner().getId().equals(currentUserId);
+        if(!isAdmin && !isOwner){
+            throw new ForbiddenOperationException("Non hai i permessi per modificare questa attività");
         }
     }
 }
