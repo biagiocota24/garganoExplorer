@@ -13,6 +13,8 @@ import AttractionFormPage from "./pages/AttractionFormPage";
 import RequireRole from "./components/RequireRole";
 import BusinessesPage from "./pages/BusinessesPage";
 import BusinessDetailsPage from "./pages/BusinessDetailPage";
+import MyBusinessesPage from "./pages/MyBusinessesPage";
+import BusinessFormPage from "./pages/BusinessFormPage";
 
 function App() {
   const loadCurrentUser = useAuthStore((state) => state.loadCurrentUser);
@@ -45,6 +47,18 @@ function App() {
             />
           </Route>
           <Route element={<RequireRole roles={["OWNER"]} />}>
+            <Route
+              path="/my-businesses"
+              element={<MyBusinessesPage />}
+            />
+            <Route
+              path="/my-businesses/new"
+              element={<BusinessFormPage />}
+            />
+            <Route
+              path="/my-businesses/:id/edit"
+              element={<BusinessFormPage />}
+            />
           </Route>
         </Route>
       </Routes>

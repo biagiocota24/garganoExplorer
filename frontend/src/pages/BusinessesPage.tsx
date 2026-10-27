@@ -181,7 +181,7 @@ const BusinessesPage = () => {
 
       {status === "success" && data && data.content.length > 0 && (
         <>
-          <Row xs={1} sm={2} md={3} xl={4} className="g-4">
+          <Row xs={1} sm={2} md={3} xl={4} className="g-4 mt-2">
             {data.content.map((b: Business) => (
               <Col key={b.id}>
                 <PlaceCard
