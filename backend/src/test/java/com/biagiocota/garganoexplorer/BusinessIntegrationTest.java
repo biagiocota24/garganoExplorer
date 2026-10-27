@@ -155,4 +155,20 @@ public class BusinessIntegrationTest extends IntegrationTestSupport{
                 .andExpect(jsonPath("$.errors.website").exists());
     }
 
+    @Test
+    void updateByAdminReturns403() throws Exception {
+        String ownerEmail = createUser(Role.OWNER);
+        Cookie cookie = loginAs(ownerEmail);
+        String businessId = createBusinessAs(cookie);
+
+        String adminEmail = createUser(Role.ADMIN);
+        Cookie adminCookie = loginAs(adminEmail);
+
+        mockMvc.perform(put("/api/businesses/"+businessId)
+                .cookie(adminCookie)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(VALID_MODIFIED_BUSINESS_BODY))
+                .andExpect(status().isForbidden());
+    }
+
 }

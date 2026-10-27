@@ -43,8 +43,8 @@ public class BusinessController {
     }
 
     @PutMapping("/{id}")
-    public BusinessResponse updateBusiness(@AuthenticationPrincipal UUID currentUserId, @PathVariable UUID id , @Valid @RequestBody BusinessRequest request  , Authentication authentication){
-        return businessService.updateBusiness(id , currentUserId , isAdmin(authentication) , request);
+    public BusinessResponse updateBusiness(@AuthenticationPrincipal UUID currentUserId, @PathVariable UUID id , @Valid @RequestBody BusinessRequest request ){
+        return businessService.updateBusiness(id , currentUserId, request);
     }
 
     @DeleteMapping("/{id}")
