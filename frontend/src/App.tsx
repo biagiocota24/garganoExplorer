@@ -12,6 +12,7 @@ import AttractionDetailsPage from "./pages/AttractionDetailsPage";
 import AttractionFormPage from "./pages/AttractionFormPage";
 import RequireRole from "./components/RequireRole";
 import BusinessesPage from "./pages/BusinessesPage";
+import BusinessDetailsPage from "./pages/BusinessDetailPage";
 
 function App() {
   const loadCurrentUser = useAuthStore((state) => state.loadCurrentUser);
@@ -29,6 +30,7 @@ function App() {
           <Route path="/attractions" element={<AttractionsPage />} />
           <Route path="/attractions/:id" element={<AttractionDetailsPage />} />
           <Route path="/businesses" element={<BusinessesPage />} />
+          <Route path="/businesses/:id" element={<BusinessDetailsPage />} />
           <Route element={<RequireAuth />}>
             <Route path="/profile" element={<ProfilePage />} />
           </Route>
