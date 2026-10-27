@@ -2,7 +2,11 @@ import { Link, useNavigate, useParams } from "react-router";
 import { useEffect, useState } from "react";
 import { Alert, Button } from "react-bootstrap";
 import { ApiError } from "../api/client";
-import { deleteBusiness, getBusinessById, type Business } from "../api/business";
+import {
+  deleteBusiness,
+  getBusinessById,
+  type Business,
+} from "../api/business";
 import LoadingSpinner from "../components/Loadingspinner";
 import PlaceDetail from "../components/placeDetail/PlaceDetail";
 import ConfirmModal from "../components/ConfirmModal";
@@ -18,9 +22,9 @@ const BusinessDetailsPage = () => {
   const navigate = useNavigate();
   const user = useAuthStore((state) => state.user);
 
-  const [status, setStatus] = useState<"loading" | "success" | "error" | "notFound">(
-    "loading",
-  );
+  const [status, setStatus] = useState<
+    "loading" | "success" | "error" | "notFound"
+  >("loading");
   const [business, setBusiness] = useState<Business | null>(null);
 
   const [showDelete, setShowDelete] = useState(false);
@@ -57,8 +61,11 @@ const BusinessDetailsPage = () => {
   }, [id]);
 
   // Proprietario dell'attività oppure admin
-  const canManage =
-    !!user && !!business && (user.id === business.ownerId || user.role === "ADMIN");
+  const isOwner = !!user && !!business && user.id === business.ownerId;
+  const isAdmin = user?.role === "ADMIN";
+
+  const canEdit = isOwner;
+  const canDelete = isOwner || isAdmin;
 
   const handleDelete = async () => {
     if (!business) return;
@@ -69,7 +76,10 @@ const BusinessDetailsPage = () => {
       const isOwner = user?.id === business.ownerId;
       navigate(isOwner ? "/my-businesses" : "/businesses", { replace: true });
     } catch (error) {
-      if (error instanceof ApiError && (error.status === 401 || error.status === 403)) {
+      if (
+        error instanceof ApiError &&
+        (error.status === 401 || error.status === 403)
+      ) {
         setDeleteError("Non hai i permessi per eliminare questa attività.");
       } else {
         setDeleteError("Eliminazione non riuscita. Riprova.");
@@ -93,7 +103,8 @@ const BusinessDetailsPage = () => {
 
       {status === "notFound" && (
         <Alert variant="info" className="mt-5">
-          Attività non trovata. <Link to="/businesses">Torna alle attività</Link>
+          Attività non trovata.{" "}
+          <Link to="/businesses">Torna alle attività</Link>
         </Alert>
       )}
 
@@ -133,13 +144,17 @@ const BusinessDetailsPage = () => {
 
                 {(business.phone || business.email || business.website) && (
                   <>
-                    <h2 className="place-detail__section-title mt-4">Contatti</h2>
+                    <h2 className="place-detail__section-title mt-4">
+                      Contatti
+                    </h2>
                     <dl className="info-list">
                       {business.phone && (
                         <div>
                           <dt>Telefono</dt>
                           <dd>
-                            <a href={`tel:${business.phone.replace(/\s/g, "")}`}>
+                            <a
+                              href={`tel:${business.phone.replace(/\s/g, "")}`}
+                            >
                               {business.phone}
                             </a>
                           </dd>
@@ -149,7 +164,9 @@ const BusinessDetailsPage = () => {
                         <div>
                           <dt>Email</dt>
                           <dd>
-                            <a href={`mailto:${business.email}`}>{business.email}</a>
+                            <a href={`mailto:${business.email}`}>
+                              {business.email}
+                            </a>
                           </dd>
                         </div>
                       )}
@@ -183,23 +200,27 @@ const BusinessDetailsPage = () => {
                   </a>
                 )}
 
-                {canManage && (
+                {(canEdit || canDelete) && (
                   <div className="d-flex flex-column gap-2 mt-4 pt-4 border-top">
-                    <Link
-                      to={`/my-businesses/${business.id}/edit`}
-                      className="btn btn-outline-primary"
-                    >
-                      Modifica
-                    </Link>
-                    <Button
-                      variant="outline-danger"
-                      onClick={() => {
-                        setDeleteError(null);
-                        setShowDelete(true);
-                      }}
-                    >
-                      Elimina
-                    </Button>
+                    {canEdit && (
+                      <Link
+                        to={`/my-businesses/${business.id}/edit`}
+                        className="btn btn-outline-primary"
+                      >
+                        Modifica
+                      </Link>
+                    )}
+                    {canDelete && (
+                      <Button
+                        variant="outline-danger"
+                        onClick={() => {
+                          setDeleteError(null);
+                          setShowDelete(true);
+                        }}
+                      >
+                        Elimina
+                      </Button>
+                    )}
                   </div>
                 )}
               </>
@@ -215,8 +236,8 @@ const BusinessDetailsPage = () => {
             onConfirm={handleDelete}
             onCancel={() => setShowDelete(false)}
           >
-            Stai per eliminare <strong>{business.name}</strong>. L'operazione non si può
-            annullare.
+            Stai per eliminare <strong>{business.name}</strong>. L'operazione
+            non si può annullare.
           </ConfirmModal>
         </>
       )}
