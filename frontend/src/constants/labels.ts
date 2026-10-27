@@ -1,4 +1,6 @@
-import type { AttractionCategory, Town } from "../api/attraction";
+import type { AttractionCategory} from "../api/attraction";
+import type { BusinessCategory, PriceRange } from "../api/business";
+import type { Town } from "../api/types";
 
 export const townTranslations: Record<Town, string> = {
   VIESTE: "Vieste",
@@ -31,4 +33,24 @@ export const attractionCategoryTranslations: Record<
   NATURE_RESERVE: "Riserva naturale",
   MUSEUM: "Museo",
   CAVE: "Grotta",
+};
+
+export const businessCategoryTranslations: Record<BusinessCategory, string> = {
+  HOTEL: "Hotel",
+  BED_AND_BREAKFAST: "B&B",
+  HOLIDAY_HOME: "Casa vacanza",
+  VILLAGE: "Villaggio",
+  CAMPING: "Campeggio",
+  AGRITURISMO: "Agriturismo",
+  RESTAURANT: "Ristorante",
+  BEACH_CLUB: "Stabilimento balneare",
+  BOAT_TOUR: "Escursione in barca",
+  EXCURSION: "Escursione",
+};
+
+export const priceRangeDescriptions: Record<PriceRange, string> = {
+  BUDGET: "€ · Economico",
+  MODERATE: "€€ · Nella media",
+  EXPENSIVE: "€€€ · Costoso",
+  LUXURY: "€€€€ · Di lusso",
 };

@@ -78,6 +78,26 @@ const AppLayout = () => {
               >
                 Attrazioni
               </Nav.Link>
+              <Nav.Link
+                as={NavLink}
+                to="/businesses"
+                end
+                onClick={() => {
+                  setExpanded(false);
+                }}
+              >
+                Attività
+              </Nav.Link>
+              {user?.role === "OWNER" && (
+                <Nav.Link
+                  as={NavLink}
+                  to="/my-businesses"
+                  end
+                  onClick={() => {
+                    setExpanded(false);
+                  }}
+                >Le mie attività</Nav.Link>
+              )}
             </Nav>
 
             {/* Parte destra: dipende da chi è loggato */}

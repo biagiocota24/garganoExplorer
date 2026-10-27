@@ -48,6 +48,10 @@ h6 {
   font-size: 0.75rem;
 }
 
+.max-width-hero-card{
+  max-width: 750px;
+}
+
 /* ===== Pulsanti: base comune ===== */
 .btn {
   --bs-btn-padding-y: 0.7rem;

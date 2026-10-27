@@ -6,7 +6,7 @@ const HomePage = function () {
   const user = useAuthStore((state) => state.user);
 
   return (
-    <section className="home-hero mt-5">
+    <section className="home-hero mt-5 max-width-hero-card m-auto">
       <h1 className="auth-hero-title">Scopri il Gargano, un passo alla volta</h1>
       <p className="lead mb-4">
         La piattaforma GarganoYes ti accompagna passo passo alla scoperta di
