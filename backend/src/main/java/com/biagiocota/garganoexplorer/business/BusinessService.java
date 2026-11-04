@@ -3,6 +3,8 @@ package com.biagiocota.garganoexplorer.business;
 import com.biagiocota.garganoexplorer.common.Town;
 import com.biagiocota.garganoexplorer.common.exception.ForbiddenOperationException;
 import com.biagiocota.garganoexplorer.common.tools.TextNormalizerTools;
+import com.biagiocota.garganoexplorer.notification.NotificationService;
+import com.biagiocota.garganoexplorer.notification.NotificationType;
 import com.biagiocota.garganoexplorer.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -18,6 +20,7 @@ import java.util.UUID;
 public class BusinessService {
     private final BusinessRepository businessRepository;
     private final UserRepository userRepository;
+    private final NotificationService notificationService;
 
     @Transactional(readOnly = true)
     public Page<BusinessResponse> findAll(Town town , BusinessCategory category , Pageable pageable){
@@ -69,6 +72,15 @@ public class BusinessService {
         businessRepository.delete(businessToDelete);
     }
 
+    @Transactional
+    public void requestChange(UUID businessId , String message){
+        Business business = businessRepository.findById(businessId).orElseThrow(BusinessNotFoundException::new);
+        notificationService.create(business.getOwner(),
+                NotificationType.BUSINESS_CHANGE_REQUEST ,
+                message.trim() ,
+                business.getId() ,
+                business.getName());
+    }
 
     private void applyRequest(Business business , BusinessRequest request){
         business.setName(TextNormalizerTools.name(request.name()));
