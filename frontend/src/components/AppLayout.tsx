@@ -1,16 +1,23 @@
 import { Button, Container, Nav, Navbar } from "react-bootstrap";
-import { Link, NavLink, Outlet, useNavigate } from "react-router";
+import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router";
 import { useAuthStore } from "../stores/authStore";
 import { useEffect, useRef, useState } from "react";
+import { useNotificationStore } from "../stores/noticationStore";
+import NotificationBell from "./NotificationBell";
 
 const AppLayout = () => {
   const [expanded, setExpanded] = useState(false);
   const navRef = useRef<HTMLElement>(null);
 
+  const location = useLocation();
   const navigate = useNavigate();
   const user = useAuthStore((state) => state.user);
   const status = useAuthStore((state) => state.status);
   const logout = useAuthStore((state) => state.logout);
+  const unreadCount = useNotificationStore((state) => state.unreadCount);
+  const refreshUnreadCount = useNotificationStore(
+    (state) => state.refreshUnreadCount,
+  );
 
   const handleLogout = async () => {
     await logout();
@@ -30,6 +37,15 @@ const AppLayout = () => {
     return () =>
       document.removeEventListener("pointerdown", handleClickOutside);
   }, [expanded]);
+
+  useEffect(() => {
+    if (status !== "authenticated") return;
+
+    refreshUnreadCount();
+    const intervalId = setInterval(refreshUnreadCount, 60_000);
+
+    return () => clearInterval(intervalId);
+  }, [status, location.pathname, refreshUnreadCount]);
 
   return (
     <>
@@ -53,9 +69,21 @@ const AppLayout = () => {
               <span className="text-success">Yes</span>
             </span>
           </Navbar.Brand>
-
-          <Navbar.Toggle aria-controls="main-navbar" />
-
+          <div className="d-flex align-items-center gap-4 d-lg-none">
+            {status === "authenticated" && (
+              <Nav.Link
+                as={NavLink}
+                to="/notifications"
+                onClick={() => {
+                  setExpanded(false);
+                }}
+                aria-label={`Notifiche,${unreadCount} non lette`}
+              >
+                <NotificationBell count={unreadCount} />
+              </Nav.Link>
+            )}
+            <Navbar.Toggle aria-controls="main-navbar" />
+          </div>
           <Navbar.Collapse id="main-navbar">
             <Nav className="me-auto">
               <Nav.Link
@@ -96,13 +124,26 @@ const AppLayout = () => {
                   onClick={() => {
                     setExpanded(false);
                   }}
-                >Le mie attività</Nav.Link>
+                >
+                  Le mie attività
+                </Nav.Link>
               )}
             </Nav>
 
             {/* Parte destra: dipende da chi è loggato */}
             {status === "authenticated" && user && (
               <Nav className="align-items-lg-center gap-2">
+                <Nav.Link
+                  as={NavLink}
+                  to="/notifications"
+                  className="d-none d-lg-block"
+                  onClick={() => {
+                    setExpanded(false);
+                  }}
+                  aria-label={`Notifiche,${unreadCount} non lette`}
+                >
+                  <NotificationBell count={unreadCount} />
+                </Nav.Link>
                 <Nav.Link as={NavLink} to="/profile">
                   {user.firstName}
                 </Nav.Link>

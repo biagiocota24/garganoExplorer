@@ -53,6 +53,12 @@ public class BusinessController {
         businessService.deleteBusiness(id , currentUserId , isAdmin(authentication));
     }
 
+    @PostMapping("/{id}/change-requests")
+    @ResponseStatus(HttpStatus.CREATED)
+    public void requestChange (@PathVariable UUID id ,@Valid @RequestBody ChangeRequestRequest request){
+        businessService.requestChange(id , request.message());
+    }
+
 
     private boolean isAdmin(Authentication authentication){
         return authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"));

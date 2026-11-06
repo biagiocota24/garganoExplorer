@@ -1,6 +1,7 @@
 import { create } from "zustand";
 import type { LoginRequest, User } from "../api/auth";
 import * as auth from "../api/auth";
+import { useNotificationStore } from "./noticationStore";
 
 type AuthStatus = "loading" | "authenticated" | "anonymous";
 
@@ -40,6 +41,7 @@ export const useAuthStore = create<AuthState>()((set) => ({
         user: null,
         status: "anonymous",
       });
+      useNotificationStore.getState().reset();
     }
   },
 }));

@@ -16,6 +16,7 @@ import {
   townTranslations,
 } from "../constants/labels";
 import { useAuthStore } from "../stores/authStore";
+import ChangeRequestModal from "../components/ChangeRequestModal";
 
 const BusinessDetailsPage = () => {
   const { id } = useParams();
@@ -30,6 +31,9 @@ const BusinessDetailsPage = () => {
   const [showDelete, setShowDelete] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
   const [deleteError, setDeleteError] = useState<string | null>(null);
+
+  const [showChangeRequest, setShowChangeRequest] = useState(false);
+  const [changeRequestSent, setChangeRequestSent] = useState(false);
 
   useEffect(() => {
     let ignore = false;
@@ -221,6 +225,27 @@ const BusinessDetailsPage = () => {
                         Elimina
                       </Button>
                     )}
+                    {isAdmin && (
+                      <Button
+                        variant="outline-secondary"
+                        onClick={() => {
+                          setChangeRequestSent(false);
+                          setShowChangeRequest(true);
+                        }}
+                      >
+                        Segnala una modifica
+                      </Button>
+                    )}
+                    {changeRequestSent && (
+                      <Alert
+                        variant="success"
+                        dismissible
+                        onClose={() => setChangeRequestSent(false)}
+                        className="mb-0"
+                      >
+                        Segnalazione inviata al proprietario.
+                      </Alert>
+                    )}
                   </div>
                 )}
               </>
@@ -239,6 +264,13 @@ const BusinessDetailsPage = () => {
             Stai per eliminare <strong>{business.name}</strong>. L'operazione
             non si può annullare.
           </ConfirmModal>
+          <ChangeRequestModal
+            show={showChangeRequest}
+            businessId={business.id}
+            businessName={business.name}
+            onClose={() => setShowChangeRequest(false)}
+            onSent={() => setChangeRequestSent(true)}
+          />
         </>
       )}
     </>

@@ -4,6 +4,7 @@ import com.biagiocota.garganoexplorer.attraction.AttractionNotFoundException;
 import com.biagiocota.garganoexplorer.auth.EmailAlreadyUsedException;
 import com.biagiocota.garganoexplorer.auth.InvalidCredentialsException;
 import com.biagiocota.garganoexplorer.business.BusinessNotFoundException;
+import com.biagiocota.garganoexplorer.notification.NotificationNotFoundException;
 import com.biagiocota.garganoexplorer.user.UserNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -108,6 +109,13 @@ public class GlobalExceptionHandler {
     public  ProblemDetail handleForribiddenOperationException(ForbiddenOperationException ex){
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN , ex.getMessage());
         problem.setTitle("Tentativo contato del server non autorizzato");
+        return problem;
+    }
+
+    @ExceptionHandler(NotificationNotFoundException.class)
+    public ProblemDetail handleNotificationNotFound(NotificationNotFoundException ex){
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND , ex.getMessage());
+        problem.setTitle("Notifica non trovata");
         return problem;
     }
 

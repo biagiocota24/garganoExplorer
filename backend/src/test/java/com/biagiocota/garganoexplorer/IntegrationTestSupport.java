@@ -3,6 +3,7 @@ package com.biagiocota.garganoexplorer;
 import com.biagiocota.garganoexplorer.user.Role;
 import com.biagiocota.garganoexplorer.user.User;
 import com.biagiocota.garganoexplorer.user.UserRepository;
+import com.jayway.jsonpath.JsonPath;
 import jakarta.servlet.http.Cookie;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.test.context.SpringBootTest;
@@ -34,6 +35,18 @@ public abstract class IntegrationTestSupport {
 
     private static final String PASSWORD = "password123";
 
+    protected static final String VALID_BUSINESS_BODY = """
+        {
+          "name": "Trattoria del Porto",
+          "description": "Piccola trattoria a conduzione familiare affacciata sul porto, con cucina di mare e piatti della tradizione garganica. Il menu cambia ogni giorno in base al pescato e ai prodotti dell'orto. In estate si mangia sulla terrazza con vista sulle barche dei pescatori.",
+          "category": "RESTAURANT",
+          "town": "VIESTE",
+          "address": "Via del Porto 12, Vieste",
+          "website": "https://esempio.it",
+          "priceRange": "MODERATE"
+        }
+        """;
+
 
     protected String createUser(Role role) {
         User user = new User();
@@ -59,5 +72,16 @@ public abstract class IntegrationTestSupport {
                 .andExpect(status().isOk())
                 .andReturn();
         return result.getResponse().getCookie("access_token");
+    }
+
+    protected String createBusinessAs(Cookie cookie)throws Exception{
+        MvcResult result = mockMvc.perform(post("/api/businesses")
+                        .cookie(cookie)
+                        .contentType(MediaType.APPLICATION_JSON)
+                        .content(VALID_BUSINESS_BODY))
+                .andExpect(status().isCreated())
+                .andReturn();
+        String json = result.getResponse().getContentAsString();
+        return JsonPath.read(json , "$.id");
     }
 }

@@ -15,6 +15,7 @@ import BusinessesPage from "./pages/BusinessesPage";
 import BusinessDetailsPage from "./pages/BusinessDetailPage";
 import MyBusinessesPage from "./pages/MyBusinessesPage";
 import BusinessFormPage from "./pages/BusinessFormPage";
+import NotificationPage from "./pages/NotificationsPage";
 
 function App() {
   const loadCurrentUser = useAuthStore((state) => state.loadCurrentUser);
@@ -35,6 +36,7 @@ function App() {
           <Route path="/businesses/:id" element={<BusinessDetailsPage />} />
           <Route element={<RequireAuth />}>
             <Route path="/profile" element={<ProfilePage />} />
+            <Route path="/notifications" element={<NotificationPage />} />
           </Route>
           <Route element={<RequireRole roles={["ADMIN"]} />}>
             <Route
