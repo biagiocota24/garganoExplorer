@@ -48,6 +48,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET , "/api/businesses/**").permitAll()
                         .requestMatchers(HttpMethod.POST , "/api/businesses").hasRole("OWNER")
                         .requestMatchers("/api/businesses/**").hasAnyRole("OWNER" , "ADMIN")
+                        .requestMatchers(HttpMethod.POST,"/api/photos/signature").hasAnyRole("OWNER" , "ADMIN")
                         .anyRequest().authenticated())
                 .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
