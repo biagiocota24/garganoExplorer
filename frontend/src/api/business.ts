@@ -88,3 +88,4 @@ export const deleteBusiness = (businessId: string) => {
 export const getMyBusinesses = () => {
   return request<Business[]>("/api/businesses/mine");
 };
+

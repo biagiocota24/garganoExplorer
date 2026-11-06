@@ -1,0 +1,105 @@
+.notification-item {
+  display: flex;
+  align-items: flex-start;
+  gap: 1rem;
+  padding: 1rem 1.25rem;
+  transition: background-color 0.2s ease;
+}
+
+/* Non letta: sfondo tenue + barra a sinistra (box-shadow: non sposta il contenuto) */
+.notification-item.is-unread {
+  background-color: var(--ge-tint, #eef7fa);
+  box-shadow: inset 4px 0 0 var(--ge-primary);
+}
+
+.notification-item__icon {
+  flex: 0 0 auto;
+  display: grid;
+  place-items: center;
+  width: 2.5rem;
+  height: 2.5rem;
+  border-radius: 50%;
+  background: rgba(26, 122, 150, 0.1);
+  color: var(--ge-primary);
+}
+
+.notification-item__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.notification-item__meta {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.5rem;
+  margin-bottom: 0.3rem;
+  font-size: 0.8rem;
+  color: var(--bs-secondary-color);
+}
+
+.notification-item__dot {
+  width: 0.5rem;
+  height: 0.5rem;
+  border-radius: 50%;
+  background: var(--ge-primary);
+}
+
+.notification-item__type {
+  color: var(--ge-primary);
+  font-size: 0.72rem;
+  font-weight: 600;
+  letter-spacing: 0.05em;
+  text-transform: uppercase;
+}
+
+.notification-item__meta time::before {
+  content: "·";
+  margin-right: 0.5rem;
+}
+
+.notification-item__message {
+  margin: 0 0 0.6rem;
+  line-height: 1.55;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+}
+
+.notification-item.is-unread .notification-item__message {
+  font-weight: 500;
+}
+
+.notification-item__business {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  padding: 0.2rem 0.7rem;
+  border-radius: 999px;
+  background: #f1f4f6;
+  color: inherit;
+  font-size: 0.85rem;
+  font-weight: 500;
+  text-decoration: none;
+  transition:
+    background-color 0.2s ease,
+    color 0.2s ease;
+}
+
+.notification-item__business:hover {
+  background: rgba(26, 122, 150, 0.12);
+  color: var(--ge-primary);
+}
+
+.notification-item__action {
+  flex: 0 0 auto;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .notification-item,
+  .notification-item__business {
+    transition: none;
+  }
+}
