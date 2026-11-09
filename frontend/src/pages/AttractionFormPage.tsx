@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router";
+import { Link, useLocation, useNavigate, useParams } from "react-router";
 import { Alert, Button, Card, Col, Form, Row } from "react-bootstrap";
 import {
   attractionCategoryTranslations,
@@ -15,6 +15,8 @@ import {
 import { ApiError } from "../api/client";
 import LoadingSpinner from "../components/Loadingspinner";
 import type { Town } from "../api/types";
+import PhotoManager from "../components/photoManager/PhotoManager";
+import type { Photo } from "../api/photo";
 
 const MIN_DESCRIPTION = 200;
 const MAX_DESCRIPTION = 5000;
@@ -29,6 +31,8 @@ const AttractionFormPage = () => {
   const { id } = useParams();
   const isEdit = Boolean(id);
   const navigate = useNavigate();
+  const location = useLocation();
+  const justCreated = (location.state as { justCreated?: boolean } | null)?.justCreated;
 
   const [loadStatus, setLoadStatus] = useState<
     "loading" | "ready" | "notFound" | "error"
@@ -36,6 +40,8 @@ const AttractionFormPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  // Foto caricate dal backend: il PhotoManager le riceve solo quando sono pronte
+  const [initialPhotos, setInitialPhotos] = useState<Photo[] | null>(null);
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -59,6 +65,7 @@ const AttractionFormPage = () => {
         setCategory(attraction.category);
         setLatitude(attraction.latitude?.toString() ?? "");
         setLongitude(attraction.longitude?.toString() ?? "");
+        setInitialPhotos(attraction.photos);
         setLoadStatus("ready");
       } catch (err) {
         if (ignore) return;
@@ -115,7 +122,12 @@ const AttractionFormPage = () => {
       const saved = id
         ? await updateAttraction(id, request)
         : await createAttraction(request);
-      navigate(`/attractions/${saved.id}`);
+      if (id) {
+        navigate(`/attractions/${saved.id}`);
+      } else {
+        // Dopo la creazione si va in modifica, dove si possono caricare le foto
+        navigate(`/admin/attractions/${saved.id}/edit`, { state: { justCreated: true } });
+      }
     } catch (err) {
       if (err instanceof ApiError && err.fieldErrors) {
         setFieldErrors(err.fieldErrors);
@@ -149,6 +161,10 @@ const AttractionFormPage = () => {
   return (
     <div className="mx-auto" style={{ maxWidth: "720px" }}>
       <h1 className="mb-4">{isEdit ? "Modifica attrazione" : "Nuova attrazione"}</h1>
+
+      {justCreated && (
+        <Alert variant="success">Attrazione creata! Ora aggiungi qualche foto qui sotto.</Alert>
+      )}
 
       <Card className="ge-card">
         <Card.Body className="p-4 p-md-5">
@@ -283,6 +299,13 @@ const AttractionFormPage = () => {
           </Form>
         </Card.Body>
       </Card>
+
+      {/* Fuori dal <Form>: i pulsanti delle foto non devono fare submit */}
+      {isEdit && id && initialPhotos && (
+        <div className="mt-4">
+          <PhotoManager resource="attractions" resourceId={id} initialPhotos={initialPhotos} />
+        </div>
+      )}
     </div>
   );
 };

@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Link, useNavigate, useParams } from "react-router";
+import { Link, useLocation, useNavigate, useParams } from "react-router";
 import { Alert, Button, Card, Col, Form, Row } from "react-bootstrap";
 import {
   businessCategoryTranslations,
@@ -18,6 +18,8 @@ import {
   type PriceRange,
 } from "../api/business";
 import { useAuthStore } from "../stores/authStore";
+import PhotoManager from "../components/photoManager/PhotoManager";
+import type { Photo } from "../api/photo";
 
 const MIN_DESCRIPTION = 200;
 const MAX_DESCRIPTION = 5000;
@@ -45,6 +47,8 @@ const BusinessFormPage = () => {
   const { id } = useParams();
   const isEdit = Boolean(id);
   const navigate = useNavigate();
+  const location = useLocation();
+  const justCreated = (location.state as { justCreated?: boolean } | null)?.justCreated;
   const user = useAuthStore((state) => state.user);
 
   const [loadStatus, setLoadStatus] = useState<"loading" | "ready" | "notFound" | "error">(
@@ -54,6 +58,8 @@ const BusinessFormPage = () => {
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
+  // Foto caricate dal backend: il PhotoManager le riceve solo quando sono pronte
+  const [initialPhotos, setInitialPhotos] = useState<Photo[] | null>(null);
 
   const [name, setName] = useState("");
   const [description, setDescription] = useState("");
@@ -88,6 +94,7 @@ const BusinessFormPage = () => {
         setEmail(business.email ?? "");
         setWebsite(business.website ?? "");
         setPriceRange(business.priceRange ?? "");
+        setInitialPhotos(business.photos);
         setLoadStatus("ready");
       } catch (err) {
         if (ignore) return;
@@ -148,7 +155,12 @@ const BusinessFormPage = () => {
 
     try {
       const saved = id ? await updateBusiness(id, request) : await createBusiness(request);
-      navigate(`/businesses/${saved.id}`);
+      if (id) {
+        navigate(`/businesses/${saved.id}`);
+      } else {
+        // Dopo la creazione si va in modifica, dove si possono caricare le foto
+        navigate(`/my-businesses/${saved.id}/edit`, { state: { justCreated: true } });
+      }
     } catch (err) {
       if (err instanceof ApiError && err.fieldErrors) {
         setFieldErrors(err.fieldErrors);
@@ -177,9 +189,8 @@ const BusinessFormPage = () => {
     );
   }
 
-  // In modifica: solo il proprietario o l'admin
-  const canEdit =
-    !isEdit || (!!user && (user.id === ownerId || user.role === "ADMIN"));
+  // In modifica: solo il proprietario (l'admin può solo eliminare o segnalare)
+  const canEdit = !isEdit || (!!user && user.id === ownerId);
 
   if (!canEdit) {
     return (
@@ -195,6 +206,10 @@ const BusinessFormPage = () => {
   return (
     <div className="mx-auto" style={{ maxWidth: "760px" }}>
       <h1 className="mb-4">{isEdit ? "Modifica attività" : "Nuova attività"}</h1>
+
+      {justCreated && (
+        <Alert variant="success">Attività creata! Ora aggiungi qualche foto qui sotto.</Alert>
+      )}
 
       <Card className="ge-card">
         <Card.Body className="p-4 p-md-5">
@@ -424,6 +439,13 @@ const BusinessFormPage = () => {
           </Form>
         </Card.Body>
       </Card>
+
+      {/* Fuori dal <Form>: i pulsanti delle foto non devono fare submit */}
+      {isEdit && id && initialPhotos && (
+        <div className="mt-4">
+          <PhotoManager resource="businesses" resourceId={id} initialPhotos={initialPhotos} />
+        </div>
+      )}
     </div>
   );
 };

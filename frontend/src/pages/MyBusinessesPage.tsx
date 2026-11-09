@@ -9,6 +9,7 @@ import {
   priceRangeDescriptions,
   townTranslations,
 } from "../constants/labels";
+import { optimizedImage } from "../utils/cloudinary";
 
 const MyBusinessesPage = () => {
   const navigate = useNavigate();
@@ -86,6 +87,7 @@ const MyBusinessesPage = () => {
                   description={b.description}
                   tone={b.category}
                   extra={b.priceRange && priceRangeDescriptions[b.priceRange]}
+                  imageUrl={b.photos[0] ? optimizedImage(b.photos[0].url, 600, 400) : undefined}
                 />
             </Col>
           ))}

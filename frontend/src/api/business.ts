@@ -1,4 +1,5 @@
 import { request } from "./client";
+import type { Photo } from "./photo";
 import type { Page, Town } from "./types";
 
 export type BusinessCategory =
@@ -31,6 +32,7 @@ export type Business = {
   ownerId: string;
   createdAt: string;
   updatedAt: string;
+    photos: Photo[];
 };
 
 export type BusinessRequest = {

@@ -14,6 +14,7 @@ import {
   type Business,
   type BusinessCategory,
 } from "../api/business";
+import { optimizedImage } from "../utils/cloudinary";
 
 const BusinessesPage = () => {
   const [data, setData] = useState<Page<Business> | null>(null);
@@ -192,6 +193,7 @@ const BusinessesPage = () => {
                   description={b.description}
                   tone={b.category}
                   extra={b.priceRange && priceRangeDescriptions[b.priceRange]}
+                  imageUrl={b.photos[0] ? optimizedImage(b.photos[0].url, 600, 400) : undefined}
                 />
               </Col>
             ))}

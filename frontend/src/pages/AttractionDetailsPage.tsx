@@ -108,6 +108,7 @@ const AttractionDetailsPage = () => {
             tone={attraction.category}
             backTo="/attractions"
             backLabel="Torna alle attrazioni"
+            images={attraction.photos.map((photo) => photo.url)}
             aside={
               <>
                 <h2 className="place-detail__section-title">Informazioni</h2>

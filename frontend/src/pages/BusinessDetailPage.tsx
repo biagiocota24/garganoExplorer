@@ -122,6 +122,7 @@ const BusinessDetailsPage = () => {
             tone={business.category}
             backTo="/businesses"
             backLabel="Torna alle attività"
+            images={business.photos.map((photo) => photo.url)}
             aside={
               <>
                 <h2 className="place-detail__section-title">Informazioni</h2>
