@@ -1,4 +1,5 @@
 import { request } from "./client";
+import type { Photo } from "./photo";
 import type { Page, Town } from "./types";
 
 export type AttractionCategory =
@@ -21,6 +22,7 @@ export type Attraction = {
   longitude: number | null;
   createdAt: string;
   updatedAt: string;
+    photos: Photo[];
 };
 
 export type AttractionRequest = {

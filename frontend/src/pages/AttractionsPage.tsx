@@ -14,6 +14,7 @@ import PlaceCard from "../components/placeCard/PlaceCard";
 import { NavLink, useSearchParams } from "react-router";
 import { useAuthStore } from "../stores/authStore";
 import type { Page, Town } from "../api/types";
+import { optimizedImage } from "../utils/cloudinary";
 
 const AttractionsPage = () => {
   const isAdmin = useAuthStore((state) => state.user?.role === "ADMIN");
@@ -197,6 +198,7 @@ const AttractionsPage = () => {
                   badge={attractionCategoryTranslations[a.category]}
                   description={a.description}
                   tone={a.category}
+                  imageUrl={a.photos[0] ? optimizedImage(a.photos[0].url, 600, 400) : undefined}
                 />
               </Col>
             ))}

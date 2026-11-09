@@ -1,7 +1,8 @@
 import { useState, type ReactNode } from "react";
 import { Link } from "react-router";
 import { Carousel, Col, Row } from "react-bootstrap";
-import "./placeDetail.css"
+import "./placeDetail.css";
+import { optimizedImage } from "../../utils/cloudinary";
 
 type Props = {
   title: string;
@@ -59,7 +60,7 @@ const PlaceDetail = ({
               {photos.map((src, i) => (
                 <Carousel.Item key={src}>
                   <img
-                    src={src}
+                    src={optimizedImage(src, 1600)}
                     alt={`${title}: foto ${i + 1} di ${photos.length}`}
                     loading={i === 0 ? "eager" : "lazy"}
                     className="place-detail__photo"
@@ -99,7 +100,7 @@ const PlaceDetail = ({
                 aria-label={`Mostra foto ${i + 1}`}
                 aria-current={i === current}
               >
-                <img src={src} alt="" loading="lazy" />
+                <img src={optimizedImage(src, 200, 150)} alt="" loading="lazy" />
               </button>
             ))}
           </div>
