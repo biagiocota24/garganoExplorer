@@ -1,5 +1,6 @@
 package com.biagiocota.garganoexplorer;
 
+import com.biagiocota.garganoexplorer.attraction.Attraction;
 import com.biagiocota.garganoexplorer.photo.CloudinaryClient;
 import com.biagiocota.garganoexplorer.user.Role;
 import com.biagiocota.garganoexplorer.user.User;
@@ -124,4 +125,25 @@ public abstract class IntegrationTestSupport {
                 .andReturn().getResponse().getContentAsString();
         return JsonPath.read(json , "$.id");
     }
+
+    protected String createAttraction(Cookie adminCookie,String validBody)throws Exception{
+          String json = mockMvc.perform(post("/api/attractions")
+                .cookie(adminCookie)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(validBody))
+                .andExpect(status().isCreated())
+                  .andReturn().getResponse().getContentAsString();
+
+          return JsonPath.read(json , "$.id");
+    }
+
+    protected  String createBusiness(Cookie ownerCookie , String validBody)throws Exception{
+        String json = mockMvc.perform(post("/api/businesses")
+                .cookie(ownerCookie)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(validBody))
+                .andExpect(status().isCreated())
+                .andReturn().getResponse().getContentAsString();
+
+        return JsonPath.read(json ,"$.id");    }
 }
