@@ -20,11 +20,13 @@ public class CloudinarySigner {
 
     //QUESTO METODO RICEVE I PARAMETRI DA FIRMARE
     public String sign(Map<String, String> params) {
+
         // TreeMap ORDINA I PARAMETRI IN ORDINE ALFABETICO
         // POI CON IL MAP LI UNISCO NEL FORMATO "key=value&key=value"
         String toSign = new TreeMap<>(params).entrySet().stream()
                 .map(entry -> entry.getKey() + "=" + entry.getValue())
                 .collect(Collectors.joining("&"));
+
         // UTIIZZO IL TRY-CATCH SOLO PERCHE JAVA OBBLIGA A GESTIRE IL CASO CHE SHA-1 NON ESISTA , IL CHE E INPROBABILE
         try {
             // E UNA CLASSE DI JAVA CHE SA CALCOLARE GLI HASH, CIOE RICEVE UN TESTO E LO CONVERTE IN UNA SEQUENZA DI LARGHEZZA FISSA
