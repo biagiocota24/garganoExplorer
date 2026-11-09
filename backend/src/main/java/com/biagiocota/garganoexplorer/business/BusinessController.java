@@ -1,6 +1,8 @@
 package com.biagiocota.garganoexplorer.business;
 
 import com.biagiocota.garganoexplorer.common.Town;
+import com.biagiocota.garganoexplorer.photo.PhotoRequest;
+import com.biagiocota.garganoexplorer.photo.PhotoResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -57,6 +59,23 @@ public class BusinessController {
     @ResponseStatus(HttpStatus.CREATED)
     public void requestChange (@PathVariable UUID id ,@Valid @RequestBody ChangeRequestRequest request){
         businessService.requestChange(id , request.message());
+    }
+
+    @PostMapping("/{id}/photos")
+    @ResponseStatus(HttpStatus.CREATED)
+    public List<PhotoResponse> addPhoto(@PathVariable UUID id,
+                                        @AuthenticationPrincipal UUID userId,
+                                        @Valid @RequestBody PhotoRequest request) {
+        return businessService.addPhoto(id, userId, request);
+    }
+
+    @DeleteMapping("/{id}/photos")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void removePhoto(@PathVariable UUID id,
+                            @RequestParam String publicId,
+                            @AuthenticationPrincipal UUID userId,
+                            Authentication authentication) {
+        businessService.removePhoto(id, userId, isAdmin(authentication), publicId);
     }
 
 

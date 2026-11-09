@@ -1,5 +1,6 @@
 package com.biagiocota.garganoexplorer;
 
+import com.biagiocota.garganoexplorer.photo.CloudinaryClient;
 import com.biagiocota.garganoexplorer.user.Role;
 import com.biagiocota.garganoexplorer.user.User;
 import com.biagiocota.garganoexplorer.user.UserRepository;
@@ -11,6 +12,8 @@ import org.springframework.boot.webmvc.test.autoconfigure.AutoConfigureMockMvc;
 import org.springframework.context.annotation.Import;
 import org.springframework.http.MediaType;
 import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.test.context.TestPropertySource;
+import org.springframework.test.context.bean.override.mockito.MockitoBean;
 import org.springframework.test.web.servlet.MockMvc;
 import org.springframework.test.web.servlet.MvcResult;
 
@@ -22,6 +25,11 @@ import static org.springframework.test.web.servlet.result.MockMvcResultMatchers.
 @SpringBootTest
 @AutoConfigureMockMvc
 @Import(TestContainerConfiguration.class)
+@TestPropertySource(properties = {
+        "cloudinary.cloud-name=test-cloud",
+        "cloudinary.api-key=test-key",
+        "cloudinary.api-secret=test-secret"
+})
 public abstract class IntegrationTestSupport {
 
     @Autowired
@@ -32,6 +40,9 @@ public abstract class IntegrationTestSupport {
 
     @Autowired
     protected PasswordEncoder passwordEncoder;
+
+    @MockitoBean
+    protected CloudinaryClient cloudinaryClient;
 
     private static final String PASSWORD = "password123";
 
@@ -46,6 +57,15 @@ public abstract class IntegrationTestSupport {
           "priceRange": "MODERATE"
         }
         """;
+
+    protected static final String VALID_ATTRACTION_BODY = """
+            {
+              "name": "Baia delle Zagare",
+              "description": "Una delle baie più famose del Gargano, con i faraglioni bianchi che emergono dal mare cristallino. Si raggiunge dal mare oppure attraverso gli stabilimenti della zona. Il periodo migliore per visitarla va da giugno a settembre.",
+              "town": "MATTINATA",
+              "category": "BEACH"
+            }
+            """;
 
 
     protected String createUser(Role role) {
@@ -82,6 +102,26 @@ public abstract class IntegrationTestSupport {
                 .andExpect(status().isCreated())
                 .andReturn();
         String json = result.getResponse().getContentAsString();
+        return JsonPath.read(json , "$.id");
+    }
+
+    protected String createBusiness(Cookie ownerCookie) throws Exception{
+        String json = mockMvc.perform(post("/api/businesses")
+                .cookie(ownerCookie)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(VALID_BUSINESS_BODY))
+                .andExpect((status().isCreated()))
+                .andReturn().getResponse().getContentAsString();
+        return JsonPath.read(json , "$.id");
+    }
+
+    protected String createAttraction(Cookie adminCookie)throws Exception{
+        String json = mockMvc.perform(post("/api/attractions")
+                .cookie(adminCookie)
+                .contentType(MediaType.APPLICATION_JSON)
+                .content(VALID_ATTRACTION_BODY))
+                .andExpect(status().isCreated())
+                .andReturn().getResponse().getContentAsString();
         return JsonPath.read(json , "$.id");
     }
 }

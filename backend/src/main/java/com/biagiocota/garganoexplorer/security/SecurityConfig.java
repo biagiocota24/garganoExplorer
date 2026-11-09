@@ -40,6 +40,7 @@ public class SecurityConfig {
                 .httpBasic(httpBasic -> httpBasic.disable())
                 .authorizeHttpRequests(auth -> auth
                         .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
+                        .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
                         .requestMatchers(HttpMethod.GET, "/api/attractions/**").permitAll()
                         .requestMatchers("/api/attractions/**").hasRole("ADMIN")
@@ -48,6 +49,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.GET , "/api/businesses/**").permitAll()
                         .requestMatchers(HttpMethod.POST , "/api/businesses").hasRole("OWNER")
                         .requestMatchers("/api/businesses/**").hasAnyRole("OWNER" , "ADMIN")
+                        .requestMatchers(HttpMethod.POST,"/api/photos/signature").hasAnyRole("OWNER" , "ADMIN")
                         .anyRequest().authenticated())
                 .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
                 .exceptionHandling(ex -> ex.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))

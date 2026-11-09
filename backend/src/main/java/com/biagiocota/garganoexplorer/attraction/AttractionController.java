@@ -1,14 +1,19 @@
 package com.biagiocota.garganoexplorer.attraction;
 
 import com.biagiocota.garganoexplorer.common.Town;
+import com.biagiocota.garganoexplorer.photo.PhotoRequest;
+import com.biagiocota.garganoexplorer.photo.PhotoResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
 
+import java.util.List;
 import java.util.UUID;
 
 @RestController
@@ -45,5 +50,18 @@ public class AttractionController {
         attractionService.deleteAttraction(id);
     }
 
+    @PostMapping("/{id}/photos")
+    @ResponseStatus(HttpStatus.CREATED)
+    public List<PhotoResponse> addPhoto(@PathVariable UUID id,
+                                        @Valid @RequestBody PhotoRequest request) {
+        return attractionService.addPhoto(id, request);
+    }
+
+    @DeleteMapping("/{id}/photos")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    public void removePhoto(@PathVariable UUID id,
+                            @RequestParam String publicId) {
+        attractionService.removePhoto(id, publicId);
+    }
 
 }

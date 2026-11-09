@@ -1,8 +1,10 @@
 package com.biagiocota.garganoexplorer.business;
 
 import com.biagiocota.garganoexplorer.common.Town;
+import com.biagiocota.garganoexplorer.photo.PhotoResponse;
 
 import java.time.Instant;
+import java.util.List;
 import java.util.UUID;
 
 public record BusinessResponse(
@@ -20,7 +22,9 @@ public record BusinessResponse(
         PriceRange priceRange,
         UUID ownerId,
         Instant createdAt,
-        Instant updatedAt
+        Instant updatedAt,
+        List<PhotoResponse> photos
+
 
 ) {
     public static BusinessResponse from(Business business){
@@ -39,7 +43,8 @@ public record BusinessResponse(
                 business.getPriceRange(),
                 business.getOwner().getId(),
                 business.getCreatedAt(),
-                business.getUpdatedAt()
+                business.getUpdatedAt(),
+                PhotoResponse.fromAll(business.getPhotos())
         );
     }
 }

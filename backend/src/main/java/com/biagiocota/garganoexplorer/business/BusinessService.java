@@ -5,6 +5,9 @@ import com.biagiocota.garganoexplorer.common.exception.ForbiddenOperationExcepti
 import com.biagiocota.garganoexplorer.common.tools.TextNormalizerTools;
 import com.biagiocota.garganoexplorer.notification.NotificationService;
 import com.biagiocota.garganoexplorer.notification.NotificationType;
+import com.biagiocota.garganoexplorer.photo.PhotoRequest;
+import com.biagiocota.garganoexplorer.photo.PhotoResponse;
+import com.biagiocota.garganoexplorer.photo.PhotoService;
 import com.biagiocota.garganoexplorer.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -21,6 +24,7 @@ public class BusinessService {
     private final BusinessRepository businessRepository;
     private final UserRepository userRepository;
     private final NotificationService notificationService;
+    private final PhotoService photoService;
 
     @Transactional(readOnly = true)
     public Page<BusinessResponse> findAll(Town town , BusinessCategory category , Pageable pageable){
@@ -69,6 +73,7 @@ public class BusinessService {
     public void deleteBusiness(UUID id , UUID currentUserId, boolean isAdmin){
         Business businessToDelete = businessRepository.findById(id).orElseThrow(BusinessNotFoundException::new);
         checkCanDelete(businessToDelete , currentUserId ,isAdmin);
+        photoService.deleteAll(businessToDelete.getPhotos());
         businessRepository.delete(businessToDelete);
     }
 
@@ -80,6 +85,23 @@ public class BusinessService {
                 message.trim() ,
                 business.getId() ,
                 business.getName());
+    }
+
+    @Transactional
+    public List<PhotoResponse> addPhoto(UUID businessId, UUID userId, PhotoRequest request) {
+        Business business = businessRepository.findById(businessId)
+                .orElseThrow(BusinessNotFoundException::new);
+        checkIsOwner(business, userId);
+        photoService.addPhoto(business.getPhotos(), request);
+        return PhotoResponse.fromAll(business.getPhotos());
+    }
+
+    @Transactional
+    public void removePhoto(UUID businessId, UUID userId, boolean isAdmin, String publicId) {
+        Business business = businessRepository.findById(businessId)
+                .orElseThrow(BusinessNotFoundException::new);
+        checkCanDelete(business, userId, isAdmin);
+        photoService.removePhoto(business.getPhotos(), publicId);
     }
 
     private void applyRequest(Business business , BusinessRequest request){

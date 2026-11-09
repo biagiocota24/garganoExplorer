@@ -5,6 +5,8 @@ import com.biagiocota.garganoexplorer.auth.EmailAlreadyUsedException;
 import com.biagiocota.garganoexplorer.auth.InvalidCredentialsException;
 import com.biagiocota.garganoexplorer.business.BusinessNotFoundException;
 import com.biagiocota.garganoexplorer.notification.NotificationNotFoundException;
+import com.biagiocota.garganoexplorer.photo.InvalidPhotoException;
+import com.biagiocota.garganoexplorer.photo.PhotoNotFoundException;
 import com.biagiocota.garganoexplorer.user.UserNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -116,6 +118,20 @@ public class GlobalExceptionHandler {
     public ProblemDetail handleNotificationNotFound(NotificationNotFoundException ex){
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND , ex.getMessage());
         problem.setTitle("Notifica non trovata");
+        return problem;
+    }
+
+    @ExceptionHandler(InvalidPhotoException.class)
+    public ProblemDetail handleInvalidPhoto(InvalidPhotoException ex){
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST , ex.getMessage());
+        problem.setTitle("Foto non valida");
+        return  problem;
+    }
+
+    @ExceptionHandler(PhotoNotFoundException.class)
+    public  ProblemDetail handlePhotoNotFound(PhotoNotFoundException ex){
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND , ex.getMessage());
+        problem.setTitle("Foto non trovata");
         return problem;
     }
 

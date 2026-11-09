@@ -15,14 +15,6 @@ import java.util.UUID;
 
 public class AttractionFlowIntegrationTest extends IntegrationTestSupport {
 
-    private static final String VALID_BODY = """
-            {
-              "name": "Baia delle Zagare",
-              "description": "Una delle baie più famose del Gargano, con i faraglioni bianchi che emergono dal mare cristallino. Si raggiunge dal mare oppure attraverso gli stabilimenti della zona. Il periodo migliore per visitarla va da giugno a settembre.",
-              "town": "MATTINATA",
-              "category": "BEACH"
-            }
-            """;
     private static final String INVALID_BODY = """
             {
               "name": "Baia delle Zagare",
@@ -42,7 +34,7 @@ public class AttractionFlowIntegrationTest extends IntegrationTestSupport {
         mockMvc.perform(post("/api/attractions")
                         .cookie(cookie)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(VALID_BODY))
+                        .content(VALID_ATTRACTION_BODY))
                 .andExpect(status().isForbidden());
     }
 
@@ -55,7 +47,7 @@ public class AttractionFlowIntegrationTest extends IntegrationTestSupport {
     void createWithoutLoginReturn401() throws Exception {
         mockMvc.perform(post("/api/attractions")
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(VALID_BODY))
+                        .content(VALID_ATTRACTION_BODY))
                 .andExpect(status().isUnauthorized());
     }
 
@@ -67,7 +59,7 @@ public class AttractionFlowIntegrationTest extends IntegrationTestSupport {
         mockMvc.perform(post("/api/attractions")
                         .cookie(cookie)
                         .contentType(MediaType.APPLICATION_JSON)
-                        .content(VALID_BODY))
+                        .content(VALID_ATTRACTION_BODY))
                 .andExpect(status().isCreated())
                 .andExpect(jsonPath("$.id").exists());
     }
