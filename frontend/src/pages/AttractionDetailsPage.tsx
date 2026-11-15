@@ -1,4 +1,4 @@
-import { NavLink, useNavigate, useParams } from "react-router";
+import { Link, NavLink, useNavigate, useParams } from "react-router";
 import {
   deleteAttraction,
   getAttractionById,
@@ -126,14 +126,13 @@ const AttractionDetailsPage = () => {
                 </dl>
                 {attraction.latitude !== null &&
                   attraction.longitude !== null && (
-                    <a
+                    <Link
                       className="btn btn-primary w-100 mt-4"
-                      href={`https://www.google.com/maps?q=${attraction.latitude},${attraction.longitude}`}
-                      target="_blank"
+                      to={`/map?focus=${attraction.id}`}
                       rel="noopener noreferrer"
                     >
-                      Apri in Google Maps
-                    </a>
+                      Vedi sulla mappa
+                    </Link>
                   )}
                 {role === "ADMIN" && (
                   <>

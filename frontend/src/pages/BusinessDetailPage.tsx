@@ -195,14 +195,13 @@ const BusinessDetailsPage = () => {
                 )}
 
                 {business.latitude !== null && business.longitude !== null && (
-                  <a
+                  <Link
                     className="btn btn-primary w-100 mt-4"
-                    href={`https://www.google.com/maps?q=${business.latitude},${business.longitude}`}
-                    target="_blank"
+                    to={`/map?focus=${business.id}`}
                     rel="noopener noreferrer"
                   >
-                    Apri in Google Maps
-                  </a>
+                    Vedi sulla mappa
+                  </Link>
                 )}
 
                 {(canEdit || canDelete) && (

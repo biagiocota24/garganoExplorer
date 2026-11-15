@@ -13,6 +13,7 @@ import {
   townTranslations,
 } from "../../constants/labels";
 import FitBounds from "../../components/map/FitBounds";
+import FocusPlace from "../../components/map/FocusPlace";
 
 const GARGANO_CENTER: [number, number] = [41.8, 15.8];
 const DEFAULT_ZOOM = 10;
@@ -31,8 +32,13 @@ const MapPage = () => {
 
   const type = searchParams.get("type") ?? "";
   const query = searchParams.get("query") ?? "";
-
   const [reloadKey, setReloadKey] = useState(0);
+
+  const focus = searchParams.get("focus") ?? "";
+
+  const focusedPlace = useMemo(() => {
+    return places.find((place) => place.id === focus);
+  }, [focus, places]);
 
   const hasFilters = Boolean(town || category || type || query);
 
@@ -43,6 +49,7 @@ const MapPage = () => {
     } else {
       next.delete(key);
     }
+    next.delete("focus");
     setSearchParams(next);
   };
 
@@ -190,12 +197,22 @@ const MapPage = () => {
               url="https://tile.openstreetmap.org/{z}/{x}/{y}.png"
               attribution='&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors'
             />
-            <FitBounds places={filteredPlaces} />
+            {focusedPlace ? (
+              <FocusPlace place={focusedPlace} />
+            ) : (
+              <FitBounds places={filteredPlaces} />
+            )}
+
             {filteredPlaces.map((place) => (
               <Marker
                 key={place.id}
                 position={[place.latitude, place.longitude]}
                 icon={getMarkerIcon(place.type)}
+                eventHandlers={
+                  place.id === focusedPlace?.id
+                    ? { add: (event) => event.target.openPopup() }
+                    : undefined
+                }
               >
                 <Popup>
                   <div className="d-flex flex-column">
