@@ -1,0 +1,46 @@
+/* Contenitore del marker: Leaflet lo posiziona, noi togliamo lo stile di default */
+.map-pin {
+  background: transparent;
+  border: none;
+}
+
+.map-pin--attraction {
+  --pin-color: #0d7a86;
+}
+
+.map-pin--business {
+  --pin-color: #e2703a;
+}
+
+/* La goccia: un quadrato con tre angoli arrotondati, ruotato di 45° */
+.map-pin__shape {
+  position: absolute;
+  top: 0;
+  left: 0;
+  width: 28px;
+  height: 28px;
+  box-sizing: border-box;
+  border-radius: 50% 50% 50% 0;
+  transform: rotate(-45deg);
+  background: var(--pin-color);
+  border: 3px solid #fff;
+  box-shadow: 0 3px 8px rgba(0, 0, 0, 0.35);
+  transition: filter 0.15s ease;
+}
+
+/* Il pallino bianco al centro */
+.map-pin__shape::after {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 8px;
+  height: 8px;
+  border-radius: 50%;
+  background: #fff;
+  transform: translate(-50%, -50%);
+}
+
+.map-pin:hover .map-pin__shape {
+  filter: brightness(1.12);
+}
