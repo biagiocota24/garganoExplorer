@@ -15,4 +15,5 @@ public interface BusinessRepository extends JpaRepository<Business , UUID> {
     Page<Business> findByCategory(BusinessCategory category , Pageable pageable);
     Page<Business> findByTownAndCategory(Town town , BusinessCategory category , Pageable pageable);
     List<Business> findByOwnerIdOrderByCreatedAtDesc(UUID ownerId);
+    List<Business> findAllByLatitudeIsNotNullAndLongitudeIsNotNull();
 }

@@ -116,6 +116,16 @@ const AppLayout = () => {
               >
                 Attività
               </Nav.Link>
+              <Nav.Link
+                as={NavLink}
+                to="/map"
+                end
+                onClick={() => {
+                  setExpanded(false);
+                }}
+              >
+                Mappa
+              </Nav.Link>
               {user?.role === "OWNER" && (
                 <Nav.Link
                   as={NavLink}
