@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -49,6 +50,11 @@ public class Business {
     private String email;
     private String website;
 
+    @ColumnDefault("0")
+    @Column(name = "review_count", nullable = false)
+    private long reviewCount;
+    private Double averageRating;
+
     @Enumerated(EnumType.STRING)
     private PriceRange priceRange;
 
@@ -69,4 +75,5 @@ public class Business {
     @OrderColumn(name = "position")
     @BatchSize(size = 20)
     private List<Photo> photos = new ArrayList<>();
+
 }

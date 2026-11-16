@@ -1,7 +1,7 @@
 import { request } from "./client";
 
 export type NotificationType =
-  | "BUSINESS_CHANGE_REQUEST"
+  | "BUSINESS_CHANGE_REQUEST" | "NEW_REVIEW"
 
 export type AppNotification = {
   id: string;

@@ -38,4 +38,9 @@ public class User {
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
     private Instant createdAt;
+
+
+    public  String getDisplayName(){
+        return this.getFirstName() + " " + this.getLastName().charAt(0);
+    }
 }
