@@ -42,6 +42,7 @@ public class SecurityConfig {
                         .dispatcherTypeMatchers(DispatcherType.ERROR).permitAll()
                         .requestMatchers("/swagger-ui/**", "/v3/api-docs/**").permitAll()
                         .requestMatchers("/api/auth/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/api/businesses/*/reviews/mine", "/api/attractions/*/reviews/mine").authenticated()
                         .requestMatchers(HttpMethod.GET, "/api/attractions/**").permitAll()
                         .requestMatchers(HttpMethod.POST,"/api/attractions/{attractionId}/reviews").hasRole("VISITOR")
                         .requestMatchers("/api/attractions/{attractionId}/reviews/{reviewId}").hasAnyRole("ADMIN" , "VISITOR")

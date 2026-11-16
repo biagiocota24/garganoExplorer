@@ -137,4 +137,38 @@ public class ReviewIntegrationTest extends IntegrationTestSupport{
                 .andExpect(status().isOk())
                 .andExpect(jsonPath("$[0].type").value("NEW_REVIEW"));
     }
+
+    @Test
+    void getMineWithoutReviewReturns204()throws Exception{
+        Cookie visitor = loginAs(createUser(Role.VISITOR));
+
+        Cookie owner = loginAs(createUser(Role.OWNER));
+        String businessId = createBusiness(owner);
+
+        mockMvc.perform(get("/api/businesses/"+businessId+"/reviews/mine")
+                .cookie(visitor))
+                .andExpect(status().isNoContent());
+    }
+
+    @Test
+    void getMineWithReviewReturns200()throws Exception{
+        Cookie visitor = loginAs(createUser(Role.VISITOR));
+        Cookie owner = loginAs(createUser(Role.OWNER));
+        String businessId = createBusiness(owner);
+        postBusinessReview(visitor,businessId,3);
+
+        mockMvc.perform(get("/api/businesses/"+businessId+"/reviews/mine")
+                        .cookie(visitor))
+                .andExpect(status().isOk())
+                .andExpect(jsonPath("$.rating").value(3));
+    }
+
+    @Test
+    void unLoggedGetMineReturns401()throws Exception{
+        Cookie owner = loginAs(createUser(Role.OWNER));
+        String businessId = createBusiness(owner);
+
+        mockMvc.perform(get("/api/businesses/"+businessId+"/reviews/mine"))
+                .andExpect(status().isUnauthorized());
+    }
 }

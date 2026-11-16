@@ -7,6 +7,7 @@ import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 
+import java.util.Optional;
 import java.util.UUID;
 
 public interface BusinessReviewRepository extends JpaRepository<BusinessReview , UUID>{
@@ -18,4 +19,5 @@ public interface BusinessReviewRepository extends JpaRepository<BusinessReview ,
 
     @Query("SELECT AVG(r.rating) FROM BusinessReview r WHERE r.business.id = :businessId")
     Double findAverageRatingByBusinessId(@Param("businessId") UUID businessId);
+    Optional<BusinessReview> findByAuthorIdAndBusinessId(UUID authorId , UUID businessId);
 }
