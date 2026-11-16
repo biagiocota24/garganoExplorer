@@ -8,6 +8,8 @@ import com.biagiocota.garganoexplorer.notification.NotificationType;
 import com.biagiocota.garganoexplorer.photo.PhotoRequest;
 import com.biagiocota.garganoexplorer.photo.PhotoResponse;
 import com.biagiocota.garganoexplorer.photo.PhotoService;
+import com.biagiocota.garganoexplorer.reviews.business.BusinessReviewRepository;
+import com.biagiocota.garganoexplorer.reviews.business.BusinessReviewService;
 import com.biagiocota.garganoexplorer.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -25,6 +27,7 @@ public class BusinessService {
     private final UserRepository userRepository;
     private final NotificationService notificationService;
     private final PhotoService photoService;
+    private final BusinessReviewRepository businessReviewRepository;
 
     @Transactional(readOnly = true)
     public Page<BusinessResponse> findAll(Town town , BusinessCategory category , Pageable pageable){
@@ -74,6 +77,7 @@ public class BusinessService {
         Business businessToDelete = businessRepository.findById(id).orElseThrow(BusinessNotFoundException::new);
         checkCanDelete(businessToDelete , currentUserId ,isAdmin);
         photoService.deleteAll(businessToDelete.getPhotos());
+        businessReviewRepository.deleteAllByBusinessId(businessToDelete.getId());
         businessRepository.delete(businessToDelete);
     }
 

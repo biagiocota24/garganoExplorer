@@ -1,6 +1,7 @@
 package com.biagiocota.garganoexplorer.business;
 
 import com.biagiocota.garganoexplorer.common.Town;
+import com.biagiocota.garganoexplorer.common.tools.SecurityTools;
 import com.biagiocota.garganoexplorer.photo.PhotoRequest;
 import com.biagiocota.garganoexplorer.photo.PhotoResponse;
 import jakarta.validation.Valid;
@@ -11,11 +12,11 @@ import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
-import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.UUID;
+
 
 @RestController
 @RequestMapping("/api/businesses")
@@ -52,7 +53,7 @@ public class BusinessController {
     @DeleteMapping("/{id}")
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteBusiness(@AuthenticationPrincipal UUID currentUserId , @PathVariable UUID id, Authentication authentication){
-        businessService.deleteBusiness(id , currentUserId , isAdmin(authentication));
+        businessService.deleteBusiness(id , currentUserId , SecurityTools.isAdmin(authentication));
     }
 
     @PostMapping("/{id}/change-requests")
@@ -75,11 +76,8 @@ public class BusinessController {
                             @RequestParam String publicId,
                             @AuthenticationPrincipal UUID userId,
                             Authentication authentication) {
-        businessService.removePhoto(id, userId, isAdmin(authentication), publicId);
+        businessService.removePhoto(id, userId, SecurityTools.isAdmin(authentication), publicId);
     }
 
 
-    private boolean isAdmin(Authentication authentication){
-        return authentication.getAuthorities().contains(new SimpleGrantedAuthority("ROLE_ADMIN"));
-    }
 }

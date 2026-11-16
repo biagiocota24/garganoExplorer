@@ -3,6 +3,7 @@ import { Link } from "react-router";
 import {
   IoCheckmarkOutline,
   IoCreateOutline,
+  IoStarOutline,
   IoStorefrontOutline,
 } from "react-icons/io5";
 import type { IconType } from "react-icons";
@@ -21,6 +22,10 @@ const typeConfig: Record<NotificationType, { label: string; Icon: IconType }> =
     BUSINESS_CHANGE_REQUEST: {
       label: "Richiesta di modifica",
       Icon: IoCreateOutline,
+    },
+    NEW_REVIEW: {
+      label: "Nuova recensione",
+      Icon: IoStarOutline,
     },
   };
 

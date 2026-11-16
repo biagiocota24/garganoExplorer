@@ -7,6 +7,8 @@ import com.biagiocota.garganoexplorer.business.BusinessNotFoundException;
 import com.biagiocota.garganoexplorer.notification.NotificationNotFoundException;
 import com.biagiocota.garganoexplorer.photo.InvalidPhotoException;
 import com.biagiocota.garganoexplorer.photo.PhotoNotFoundException;
+import com.biagiocota.garganoexplorer.reviews.ReviewAlreadyExistsException;
+import com.biagiocota.garganoexplorer.reviews.ReviewNotFoundException;
 import com.biagiocota.garganoexplorer.user.UserNotFoundException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.dao.DataIntegrityViolationException;
@@ -135,4 +137,17 @@ public class GlobalExceptionHandler {
         return problem;
     }
 
+    @ExceptionHandler(ReviewAlreadyExistsException.class)
+    public  ProblemDetail handleReviewAlreadyExists(ReviewAlreadyExistsException ex){
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT , ex.getMessage());
+        problem.setTitle("Recensione per questa struttura gia presente");
+        return problem;
+    }
+
+    @ExceptionHandler(ReviewNotFoundException.class)
+    public  ProblemDetail handleReviewNotFoundException(ReviewNotFoundException ex){
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND , ex.getMessage());
+        problem.setTitle("Recensione non trovata");
+        return problem;
+    }
 }

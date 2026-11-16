@@ -5,6 +5,8 @@ import com.biagiocota.garganoexplorer.common.tools.TextNormalizerTools;
 import com.biagiocota.garganoexplorer.photo.PhotoRequest;
 import com.biagiocota.garganoexplorer.photo.PhotoResponse;
 import com.biagiocota.garganoexplorer.photo.PhotoService;
+import com.biagiocota.garganoexplorer.reviews.attraction.AttractionReviewRepository;
+import com.biagiocota.garganoexplorer.reviews.attraction.AttractionReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
@@ -21,6 +23,7 @@ import java.util.UUID;
 public class AttractionService {
     private final AttractionRepository attractionRepository;
     private final PhotoService photoService;
+    private final AttractionReviewRepository attractionReviewRepository;
 
     @Transactional(readOnly = true)
     public Page<AttractionResponse> findAll(Town town, AttractionCategory attractionCategory, Pageable pageable) {
@@ -71,6 +74,7 @@ public class AttractionService {
     public void deleteAttraction(UUID id) {
         Attraction toDelete = attractionRepository.findById(id).orElseThrow(AttractionNotFoundException::new);
         photoService.deleteAll(toDelete.getPhotos());
+        attractionReviewRepository.deleteAllByAttractionId(toDelete.getId());
         attractionRepository.delete(toDelete);
     }
 

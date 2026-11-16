@@ -15,6 +15,7 @@ public record AttractionResponse(
         AttractionCategory category,
         Double latitude,
         Double longitude,
+        long reviewCount,
         Instant createdAt,
         Instant updatedAt,
         List<PhotoResponse> photos
@@ -29,6 +30,7 @@ public record AttractionResponse(
                 attraction.getCategory(),
                 attraction.getLatitude(),
                 attraction.getLongitude(),
+                attraction.getReviewCount(),
                 attraction.getCreatedAt(),
                 attraction.getUpdatedAt(),
                 PhotoResponse.fromAll(attraction.getPhotos())

@@ -8,6 +8,7 @@ import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
 import org.hibernate.annotations.BatchSize;
+import org.hibernate.annotations.ColumnDefault;
 import org.hibernate.annotations.CreationTimestamp;
 import org.hibernate.annotations.UpdateTimestamp;
 
@@ -41,8 +42,11 @@ public class Attraction {
     private AttractionCategory category;
 
     private Double latitude;
-
     private Double longitude;
+
+    @ColumnDefault("0")
+    @Column(name = "review_count" , nullable = false)
+    private long reviewCount;
 
     @CreationTimestamp
     @Column(nullable = false, updatable = false)
