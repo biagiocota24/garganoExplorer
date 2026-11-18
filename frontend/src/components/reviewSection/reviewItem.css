@@ -1,0 +1,123 @@
+.review-item {
+  display: flex;
+  gap: 0.9rem;
+  padding: 1rem;
+  border: 1px solid var(--bs-border-color);
+  border-radius: 0.9rem;
+  background: var(--bs-body-bg);
+  transition: box-shadow 0.15s ease, border-color 0.15s ease;
+}
+
+.review-item:hover {
+  border-color: rgba(var(--bs-primary-rgb), 0.2);
+  box-shadow: 0 2px 10px rgba(0, 0, 0, 0.05);
+}
+
+.review-item.is-own {
+  border-color: rgba(var(--bs-primary-rgb), 0.3);
+  background: rgba(var(--bs-primary-rgb), 0.05);
+}
+
+/* Contenitore della lista in ReviewSection: distanza tra le schede */
+.review-list {
+  display: flex;
+  flex-direction: column;
+  gap: 0.75rem;
+}
+
+/* ---------- Avatar ---------- */
+.review-item__avatar {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 2.6rem;
+  height: 2.6rem;
+  border-radius: 50%;
+  font-weight: 700;
+  font-size: 1.05rem;
+  color: #fff;
+}
+
+.review-item__avatar[data-tone="0"] { background: #0d7a86; }
+.review-item__avatar[data-tone="1"] { background: #e2703a; }
+.review-item__avatar[data-tone="2"] { background: #6a5acd; }
+.review-item__avatar[data-tone="3"] { background: #2e8b57; }
+.review-item__avatar[data-tone="4"] { background: #c2416b; }
+.review-item__avatar[data-tone="5"] { background: #b8860b; }
+
+/* ---------- Corpo ---------- */
+.review-item__body {
+  flex: 1;
+  min-width: 0;
+}
+
+.review-item__header {
+  display: flex;
+  flex-wrap: wrap;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 0.25rem 1rem;
+  margin-bottom: 0.4rem;
+}
+
+.review-item__author {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.review-item__name {
+  font-weight: 600;
+}
+
+.review-item__badge {
+  font-weight: 500;
+  font-size: 0.7rem;
+}
+
+.review-item__meta {
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  font-size: 0.85rem;
+  color: var(--bs-secondary-color);
+}
+
+.review-item__edited {
+  font-style: italic;
+}
+
+.review-item__text {
+  margin: 0;
+  white-space: pre-line;
+  overflow-wrap: anywhere;
+  line-height: 1.6;
+}
+
+.review-item__text.is-clamped {
+  display: -webkit-box;
+  -webkit-line-clamp: 4;
+  -webkit-box-orient: vertical;
+  overflow: hidden;
+}
+
+.review-item__toggle {
+  margin-top: 0.25rem;
+  padding: 0;
+  border: none;
+  background: none;
+  color: var(--bs-primary);
+  font-size: 0.9rem;
+  font-weight: 500;
+}
+
+.review-item__toggle:hover {
+  text-decoration: underline;
+}
+
+.review-item__actions {
+  display: flex;
+  gap: 0.5rem;
+  margin-top: 0.75rem;
+}

@@ -29,7 +29,7 @@ public class AttractionReviewService {
         if(!attractionRepository.existsById(attractionId)){
             throw new AttractionNotFoundException();
         }
-        Page<AttractionReview> attractionReviews = attractionReviewRepository.findByAttractionIdOrderByCreatedAtDesc(attractionId , pageable);
+        Page<AttractionReview> attractionReviews = attractionReviewRepository.findByAttractionId(attractionId , pageable);
         return attractionReviews.map(AttractionReviewResponse::from);
     }
 

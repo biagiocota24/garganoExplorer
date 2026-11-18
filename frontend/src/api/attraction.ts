@@ -22,7 +22,8 @@ export type Attraction = {
   longitude: number | null;
   createdAt: string;
   updatedAt: string;
-    photos: Photo[];
+  photos: Photo[];
+  reviewCount: number;
 };
 
 export type AttractionRequest = {
@@ -33,7 +34,6 @@ export type AttractionRequest = {
   latitude?: number | null;
   longitude?: number | null;
 };
-
 
 export const getAttractions = (
   params: { town?: Town; category?: AttractionCategory; page?: number } = {},

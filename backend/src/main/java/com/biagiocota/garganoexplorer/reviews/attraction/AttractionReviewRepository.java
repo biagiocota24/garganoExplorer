@@ -10,7 +10,7 @@ import java.util.UUID;
 
 public interface AttractionReviewRepository extends JpaRepository<AttractionReview , UUID> {
     @EntityGraph(attributePaths = "author")
-    Page<AttractionReview> findByAttractionIdOrderByCreatedAtDesc(UUID attractionId , Pageable pageable);
+    Page<AttractionReview> findByAttractionId(UUID attractionId , Pageable pageable);
     boolean existsByAuthorIdAndAttractionId(UUID authorId , UUID attractionId);
     void deleteAllByAttractionId(UUID attractionId);
     long countByAttractionId(UUID attractionId);

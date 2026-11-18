@@ -53,7 +53,6 @@
   --cover: linear-gradient(135deg, #6b7c8f, #2f3a48);
 }
 
-
 /* Attività commerciali */
 [data-tone="HOTEL"] {
   --cover: linear-gradient(135deg, #5b7fd6, #2f4a99);
@@ -118,6 +117,12 @@
   letter-spacing: 0.02em;
   box-shadow: 0 2px 6px rgba(0, 0, 0, 0.08);
 }
+
+/* .place-card__rating {
+  position: absolute;
+  top: 0.85rem;
+  right: 0.85rem;
+} */
 
 .place-card__body {
   display: flex;

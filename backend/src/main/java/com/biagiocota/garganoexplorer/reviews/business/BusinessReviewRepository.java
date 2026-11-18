@@ -12,7 +12,7 @@ import java.util.UUID;
 
 public interface BusinessReviewRepository extends JpaRepository<BusinessReview , UUID>{
     @EntityGraph(attributePaths = "author")
-    Page<BusinessReview> findByBusinessIdOrderByCreatedAtDesc(UUID businessId , Pageable pageable);
+    Page<BusinessReview> findByBusinessId(UUID businessId , Pageable pageable);
     boolean existsByAuthorIdAndBusinessId(UUID authorId , UUID businessId);
     void deleteAllByBusinessId(UUID businessId);
     long countByBusinessId(UUID businessId);

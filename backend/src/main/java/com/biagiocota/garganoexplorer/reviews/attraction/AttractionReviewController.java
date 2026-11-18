@@ -5,6 +5,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,7 @@ public class AttractionReviewController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public Page<AttractionReviewResponse> findByAttraction(@PathVariable UUID attractionId , @PageableDefault Pageable pageable){
+    public Page<AttractionReviewResponse> findByAttraction(@PathVariable UUID attractionId , @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable){
         return attractionReviewService.findByAttraction(attractionId , pageable);
     }
 

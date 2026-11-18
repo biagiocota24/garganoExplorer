@@ -1,3 +1,7 @@
+html{
+  scroll-behavior: smooth;
+}
+
 /* 1. I colori del progetto, in un solo posto */
 :root {
   --ge-primary: #1a7a96;

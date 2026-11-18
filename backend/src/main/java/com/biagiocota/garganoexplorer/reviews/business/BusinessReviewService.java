@@ -33,7 +33,7 @@ public class BusinessReviewService {
         if (!businessRepository.existsById(businessId)){
             throw new BusinessNotFoundException();
         }
-        Page<BusinessReview>  businessReviews = businessReviewRepository.findByBusinessIdOrderByCreatedAtDesc(businessId ,pageable);
+        Page<BusinessReview>  businessReviews = businessReviewRepository.findByBusinessId(businessId ,pageable);
         return businessReviews.map(BusinessReviewResponse::from);
     }
 

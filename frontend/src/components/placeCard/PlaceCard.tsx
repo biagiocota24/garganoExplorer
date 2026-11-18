@@ -1,6 +1,7 @@
 import { useState, type ReactNode } from "react";
 import { Link } from "react-router";
-import "./placeCard.css"
+import "./placeCard.css";
+import StarRating from "../starRating/StarRating";
 
 type Props = {
   to: string;
@@ -13,6 +14,8 @@ type Props = {
   tone?: string;
   /** Contenuto extra sopra "Scopri di più" (es. prezzo, valutazione) */
   extra?: ReactNode;
+  avgRating: number;
+  reviewCount: number;
 };
 
 const PlaceCard = ({
@@ -24,6 +27,8 @@ const PlaceCard = ({
   imageUrl,
   tone,
   extra,
+  avgRating,
+  reviewCount,
 }: Props) => {
   const [imageFailed, setImageFailed] = useState(false);
   const showImage = Boolean(imageUrl) && !imageFailed;
@@ -47,7 +52,19 @@ const PlaceCard = ({
         {subtitle && <span className="place-card__subtitle">{subtitle}</span>}
         <h3 className="place-card__title">{title}</h3>
         {description && <p className="place-card__text">{description}</p>}
-        {extra && <div className="place-card__extra">{extra}</div>}
+        {extra && (
+          <div className="place-card__extra d-flex justify-content-between flex-sm-column flex-lg-row">
+            {extra}
+            {avgRating && (
+              <StarRating
+                value={avgRating}
+                showValue
+                className="place-card__rating"
+                reviewCount={reviewCount}
+              />
+            )}
+          </div>
+        )}
         <span className="place-card__more">
           Scopri di più <span aria-hidden="true">→</span>
         </span>

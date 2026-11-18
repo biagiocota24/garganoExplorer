@@ -5,6 +5,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -22,7 +23,7 @@ public class BusinessReviewController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public Page<BusinessReviewResponse> getReviewsByBusiness(@PathVariable UUID businessId , @PageableDefault Pageable pageable){
+    public Page<BusinessReviewResponse> getReviewsByBusiness(@PathVariable UUID businessId , @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable){
         return businessReviewService.findByBusiness(businessId , pageable );
     }
 
