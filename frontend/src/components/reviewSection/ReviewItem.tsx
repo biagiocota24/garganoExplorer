@@ -3,7 +3,7 @@ import { Badge, Button } from "react-bootstrap";
 import { IoCreateOutline, IoTrashOutline } from "react-icons/io5";
 import type { Review } from "../../api/review";
 import StarRating from "../starRating/StarRating";
-import { formatFullDateReview, formatRelativeTimeReview } from "../../utils/dates";
+import { formatFullDate, formatRelativeTime } from "../../utils/dates";
 import "./reviewItem.css";
 
 type ReviewItemProps = {
@@ -62,11 +62,11 @@ const ReviewItem = ({
 
           <div className="review-item__meta">
             {"rating" in review && <StarRating value={review.rating} size={14} />}
-            <time dateTime={review.createdAt} title={formatFullDateReview(review.createdAt)}>
-              {formatRelativeTimeReview(review.createdAt)}
+            <time dateTime={review.createdAt} title={formatFullDate(review.createdAt)}>
+              {formatRelativeTime(review.createdAt)}
             </time>
             {wasEdited && (
-              <span className="review-item__edited" title={`Modificata ${formatFullDateReview(review.updatedAt)}`}>
+              <span className="review-item__edited" title={`Modificata ${formatFullDate(review.updatedAt)}`}>
                 · modificata
               </span>
             )}

@@ -7,7 +7,9 @@ import {
   townTranslations,
 } from "../constants/labels";
 import { ApiError } from "../api/client";
-import LoadingSpinner from "../components/Loadingspinner";
+import LoadingState from "../components/feedback/LoadingState";
+import ErrorState from "../components/feedback/ErrorState";
+import { getErrorMessage } from "../api/errors";
 import type { Town } from "../api/types";
 import {
   createBusiness,
@@ -55,6 +57,8 @@ const BusinessFormPage = () => {
     isEdit ? "loading" : "ready",
   );
   const [ownerId, setOwnerId] = useState<string | null>(null);
+  const [loadError, setLoadError] = useState("");
+  const [reloadKey, setReloadKey] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
@@ -101,6 +105,7 @@ const BusinessFormPage = () => {
         if (err instanceof ApiError && err.status === 404) {
           setLoadStatus("notFound");
         } else {
+          setLoadError(getErrorMessage(err, "Impossibile caricare l'attività."));
           setLoadStatus("error");
         }
       }
@@ -110,7 +115,12 @@ const BusinessFormPage = () => {
     return () => {
       ignore = true;
     };
-  }, [id]);
+  }, [id, reloadKey]);
+
+  const handleRetry = () => {
+    setLoadStatus("loading");
+    setReloadKey((key) => key + 1);
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -121,14 +131,14 @@ const BusinessFormPage = () => {
     const lat = toCoordinate(latitude);
     const lng = toCoordinate(longitude);
 
-    if (!category) errors.category = "Seleziona una categoria";
-    if (!town) errors.town = "Seleziona un comune";
-    if (address.trim() === "") errors.address = "Inserisci l'indirizzo";
+    if (!category) errors.category = "Seleziona una categoria.";
+    if (!town) errors.town = "Seleziona un comune.";
+    if (address.trim() === "") errors.address = "Inserisci l'indirizzo.";
     if (lat !== null && Number.isNaN(lat)) {
-      errors.latitude = "Inserisci un numero valido (es. 41.72)";
+      errors.latitude = "Inserisci un numero valido (es. 41.72).";
     }
     if (lng !== null && Number.isNaN(lng)) {
-      errors.longitude = "Inserisci un numero valido (es. 16.06)";
+      errors.longitude = "Inserisci un numero valido (es. 16.06).";
     }
 
     if (Object.keys(errors).length > 0 || !town || !category) {
@@ -167,7 +177,7 @@ const BusinessFormPage = () => {
       } else if (err instanceof ApiError && err.status === 403) {
         setError("Non hai i permessi per modificare questa attività.");
       } else {
-        setError("Salvataggio non riuscito. Riprova tra poco.");
+        setError(getErrorMessage(err, "Salvataggio non riuscito. Riprova tra poco."));
       }
     } finally {
       setIsSubmitting(false);
@@ -175,17 +185,27 @@ const BusinessFormPage = () => {
   };
 
   if (loadStatus === "loading") {
-    return <LoadingSpinner text="Caricamento in corso..." variant="primary" />;
+    return <LoadingState />;
   }
 
-  if (loadStatus === "notFound" || loadStatus === "error") {
+  if (loadStatus === "notFound") {
     return (
-      <Alert variant={loadStatus === "notFound" ? "info" : "danger"} className="mt-5">
-        {loadStatus === "notFound"
-          ? "Attività non trovata."
-          : "Impossibile caricare l'attività."}{" "}
-        <Link to="/my-businesses">Torna alle tue attività</Link>
-      </Alert>
+      <ErrorState
+        message="Attività non trovata."
+        backTo="/my-businesses"
+        backLabel="Torna alle tue attività"
+      />
+    );
+  }
+
+  if (loadStatus === "error") {
+    return (
+      <ErrorState
+        message={loadError}
+        onRetry={handleRetry}
+        backTo="/my-businesses"
+        backLabel="Torna alle tue attività"
+      />
     );
   }
 
@@ -194,10 +214,11 @@ const BusinessFormPage = () => {
 
   if (!canEdit) {
     return (
-      <Alert variant="warning" className="mt-5">
-        Non puoi modificare un'attività che non è tua.{" "}
-        <Link to="/my-businesses">Torna alle tue attività</Link>
-      </Alert>
+      <ErrorState
+        message="Non puoi modificare un'attività che non è tua."
+        backTo="/my-businesses"
+        backLabel="Torna alle tue attività"
+      />
     );
   }
 
@@ -208,7 +229,7 @@ const BusinessFormPage = () => {
       <h1 className="mb-4">{isEdit ? "Modifica attività" : "Nuova attività"}</h1>
 
       {justCreated && (
-        <Alert variant="success">Attività creata! Ora aggiungi qualche foto qui sotto.</Alert>
+        <Alert variant="success">Attività creata. Ora aggiungi qualche foto qui sotto.</Alert>
       )}
 
       <Card className="ge-card">
@@ -433,7 +454,7 @@ const BusinessFormPage = () => {
                 Annulla
               </Link>
               <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? "Salvataggio..." : isEdit ? "Salva modifiche" : "Crea attività"}
+                {isSubmitting ? "Salvataggio…" : isEdit ? "Salva modifiche" : "Crea attività"}
               </Button>
             </div>
           </Form>

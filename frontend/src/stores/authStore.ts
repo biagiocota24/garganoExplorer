@@ -1,7 +1,7 @@
 import { create } from "zustand";
 import type { LoginRequest, User } from "../api/auth";
 import * as auth from "../api/auth";
-import { useNotificationStore } from "./noticationStore";
+import { useNotificationStore } from "./notificationStore";
 
 type AuthStatus = "loading" | "authenticated" | "anonymous";
 

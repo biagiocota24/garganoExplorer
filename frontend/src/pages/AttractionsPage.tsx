@@ -4,8 +4,11 @@ import {
   type Attraction,
   type AttractionCategory,
 } from "../api/attraction";
-import { Alert, Button, Col, Form, Row } from "react-bootstrap";
-import LoadingSpinner from "../components/Loadingspinner";
+import { Button, Col, Form, Row } from "react-bootstrap";
+import LoadingState from "../components/feedback/LoadingState";
+import ErrorState from "../components/feedback/ErrorState";
+import EmptyState from "../components/feedback/EmptyState";
+import { getErrorMessage } from "../api/errors";
 import {
   attractionCategoryTranslations,
   townTranslations,
@@ -22,6 +25,8 @@ const AttractionsPage = () => {
   const [status, setStatus] = useState<"loading" | "success" | "error">(
     "loading",
   );
+  const [errorMessage, setErrorMessage] = useState("");
+  const [reloadKey, setReloadKey] = useState(0);
 
   const [searchParams, setSearchParams] = useSearchParams();
   const town = searchParams.get("town") as Town | null;
@@ -60,6 +65,11 @@ const AttractionsPage = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const handleRetry = () => {
+    setStatus("loading");
+    setReloadKey((key) => key + 1);
+  };
+
   useEffect(() => {
     let ignore = false;
     const loadAttractions = async () => {
@@ -72,8 +82,9 @@ const AttractionsPage = () => {
         if (ignore) return;
         setData(result);
         setStatus("success");
-      } catch {
+      } catch (err) {
         if (ignore) return;
+        setErrorMessage(getErrorMessage(err, "Impossibile caricare le attrazioni."));
         setStatus("error");
       }
     };
@@ -82,7 +93,7 @@ const AttractionsPage = () => {
     return () => {
       ignore = true;
     };
-  }, [town, category, page]);
+  }, [town, category, page, reloadKey]);
 
   return (
     <>
@@ -94,7 +105,7 @@ const AttractionsPage = () => {
           </span>
         </div>
         {isAdmin && (
-          <NavLink to="/admin/attractions/new" className="btn btn-outline-primary">+ Nuova Attrazione</NavLink>
+          <NavLink to="/admin/attractions/new" className="btn btn-outline-primary">+ Nuova attrazione</NavLink>
         )}
       </div>
 
@@ -139,51 +150,41 @@ const AttractionsPage = () => {
       </Row>
 
       {status === "error" && (
-        <Alert
-          variant="danger"
-          className="d-flex justify-content-center align-items-center mt-5"
-          style={{ height: "200px" }}
-        >
-          Caricamento attrazioni non riuscito!
-        </Alert>
+        <ErrorState message={errorMessage} onRetry={handleRetry} />
       )}
 
-      {status === "loading" && (
-        <LoadingSpinner text="Caricamento in corso..." variant="primary" />
-      )}
+      {status === "loading" && <LoadingState />}
 
       {status === "success" && data && data.content.length === 0 && (
-        <Alert
-          variant="info"
-          className="d-flex flex-column justify-content-center align-items-center mt-5"
-          style={{ height: "200px" }}
+        <EmptyState
+          message={hasFilters ? "Nessuna attrazione trovata con i filtri selezionati." : "Nessuna attrazione trovata."}
+          action={
+            hasFilters && (
+              <Button variant="outline-secondary" onClick={removeFilters}>
+                Azzera filtri
+              </Button>
+            )
+          }
         >
-          {hasFilters ? (
-            <>
-              <span>Nessuna attrazione trovata per:</span>
-              <ul className="m-0 mt-2">
-                {town && (
-                  <li>
-                    Comune:{" "}
-                    <span className="fw-semibold">
-                      {townTranslations[town]}
-                    </span>
-                  </li>
-                )}
-                {category && (
-                  <li>
-                    Categoria:{" "}
-                    <span className="fw-semibold">
-                      {attractionCategoryTranslations[category]}
-                    </span>
-                  </li>
-                )}
-              </ul>
-            </>
-          ) : (
-            "Nessuna attrazione trovata"
+          {hasFilters && (
+            <ul>
+              {town && (
+                <li>
+                  Comune:{" "}
+                  <span className="fw-semibold">{townTranslations[town]}</span>
+                </li>
+              )}
+              {category && (
+                <li>
+                  Categoria:{" "}
+                  <span className="fw-semibold">
+                    {attractionCategoryTranslations[category]}
+                  </span>
+                </li>
+              )}
+            </ul>
           )}
-        </Alert>
+        </EmptyState>
       )}
 
       {status === "success" && data && data.content.length > 0 && (

@@ -61,7 +61,7 @@ const ConfirmModal = ({
           {isProcessing ? (
             <>
               <Spinner size="sm" className="me-2" aria-hidden="true" />
-              Attendere...
+              Attendere…
             </>
           ) : (
             confirmLabel

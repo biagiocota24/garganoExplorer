@@ -6,8 +6,10 @@ import {
 } from "../api/attraction";
 import { useEffect, useState } from "react";
 import { ApiError } from "../api/client";
-import { Alert, Button } from "react-bootstrap";
-import LoadingSpinner from "../components/Loadingspinner";
+import { Button } from "react-bootstrap";
+import LoadingState from "../components/feedback/LoadingState";
+import ErrorState from "../components/feedback/ErrorState";
+import { getErrorMessage } from "../api/errors";
 import PlaceDetail from "../components/placeDetail/PlaceDetail";
 import {
   attractionCategoryTranslations,
@@ -24,6 +26,8 @@ const AttractionDetailsPage = () => {
     "loading" | "success" | "error" | "notFound"
   >("loading");
   const [attraction, setAttraction] = useState<Attraction | null>(null);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [reloadKey, setReloadKey] = useState(0);
 
   const navigate = useNavigate();
   const params = useParams();
@@ -46,6 +50,9 @@ const AttractionDetailsPage = () => {
         if (error instanceof ApiError && error.status === 404) {
           setStatus("notFound");
         } else {
+          setErrorMessage(
+            getErrorMessage(error, "Impossibile caricare l'attrazione."),
+          );
           setStatus("error");
         }
       }
@@ -55,7 +62,12 @@ const AttractionDetailsPage = () => {
     return () => {
       ignore = true;
     };
-  }, [params.id]);
+  }, [params.id, reloadKey]);
+
+  const handleRetry = () => {
+    setStatus("loading");
+    setReloadKey((key) => key + 1);
+  };
 
   const [showDelete, setShowDelete] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -68,8 +80,10 @@ const AttractionDetailsPage = () => {
     try {
       await deleteAttraction(attraction.id);
       navigate("/attractions", { replace: true });
-    } catch {
-      setDeleteError("Eliminazione non riuscita. Riprova.");
+    } catch (error) {
+      setDeleteError(
+        getErrorMessage(error, "Eliminazione non riuscita. Riprova."),
+      );
       setIsDeleting(false);
     }
   };
@@ -87,29 +101,23 @@ const AttractionDetailsPage = () => {
   return (
     <>
       {status === "error" && (
-        <Alert
-          variant="danger"
-          className="d-flex justify-content-center align-items-center mt-5"
-          style={{ height: "200px" }}
-        >
-          Caricamento attrazione non riuscito!
-        </Alert>
+        <ErrorState
+          message={errorMessage}
+          onRetry={handleRetry}
+          backTo="/attractions"
+          backLabel="Torna alle attrazioni"
+        />
       )}
+
       {status === "notFound" && (
-        <>
-          <Alert
-            variant="info"
-            className="d-flex justify-content-center align-items-center mt-5"
-            style={{ height: "200px" }}
-          >
-            Attrazione non trovata
-          </Alert>
-          <NavLink to="/attractions">&lt;--Torna alle attrazioni</NavLink>
-        </>
+        <ErrorState
+          message="Attrazione non trovata."
+          backTo="/attractions"
+          backLabel="Torna alle attrazioni"
+        />
       )}
-      {status === "loading" && (
-        <LoadingSpinner text="Caricamento in corso..." variant="primary" />
-      )}
+
+      {status === "loading" && <LoadingState />}
 
       {status === "success" && attraction && (
         <>
@@ -153,7 +161,7 @@ const AttractionDetailsPage = () => {
                       to={`/admin/attractions/${params.id}/edit`}
                       className="btn btn-warning w-100 mt-2"
                     >
-                      Gestisci Attrazione
+                      Gestisci attrazione
                     </NavLink>
                     <Button
                       variant="danger"
@@ -163,7 +171,7 @@ const AttractionDetailsPage = () => {
                         setShowDelete(true);
                       }}
                     >
-                      Elimina Attrazione
+                      Elimina attrazione
                     </Button>
                   </>
                 )}

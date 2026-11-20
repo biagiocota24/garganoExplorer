@@ -8,8 +8,8 @@ import {
 } from "react-icons/io5";
 import type { IconType } from "react-icons";
 import type { AppNotification, NotificationType } from "../../api/notification";
-import "./notificationItem.css"
-import { formatFullDateNotification, formatRelativeTimeNotification } from "../../utils/dates";
+import "./notificationItem.css";
+import { formatFullDate, formatRelativeTime } from "../../utils/dates";
 
 type Props = {
   notification: AppNotification;
@@ -55,8 +55,8 @@ const NotificationItem = ({
             <span className="notification-item__dot" aria-hidden="true" />
           )}
           <span className="notification-item__type">{label}</span>
-          <time dateTime={createdAt} title={formatFullDateNotification(createdAt)}>
-            {formatRelativeTimeNotification(createdAt)}
+          <time dateTime={createdAt} title={formatFullDate(createdAt)}>
+            {formatRelativeTime(createdAt)}
           </time>
           {!read && <span className="visually-hidden">Non letta</span>}
         </div>

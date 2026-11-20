@@ -13,6 +13,8 @@ import {
 } from "../../api/photo";
 import type { Photo, PhotoResource } from "../../api/photo";
 import { optimizedImage } from "../../utils/cloudinary";
+import { ApiError } from "../../api/client";
+import { getErrorMessage } from "../../api/errors";
 import "./PhotoManager.css";
 
 interface PhotoManagerProps {
@@ -20,6 +22,15 @@ interface PhotoManagerProps {
   resourceId: string;
   initialPhotos: Photo[];
 }
+
+// Gli errori di Cloudinary arrivano come Error con un messaggio già leggibile;
+// quelli del nostro backend e quelli di rete passano da getErrorMessage
+const photoErrorMessage = (err: unknown, fallback: string): string => {
+  if (err instanceof ApiError || err instanceof TypeError || !(err instanceof Error)) {
+    return getErrorMessage(err, fallback);
+  }
+  return err.message || fallback;
+};
 
 interface UploadProgress {
   current: number;
@@ -73,7 +84,7 @@ function PhotoManager({ resource, resourceId, initialPhotos }: PhotoManagerProps
         setPhotos(updated);
       }
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Caricamento non riuscito");
+      setError(photoErrorMessage(err, "Caricamento non riuscito. Riprova."));
     } finally {
       setProgress(null);
     }
@@ -86,7 +97,7 @@ function PhotoManager({ resource, resourceId, initialPhotos }: PhotoManagerProps
       await removePhoto(resource, resourceId, publicId);
       setPhotos((prev) => prev.filter((photo) => photo.publicId !== publicId));
     } catch (err) {
-      setError(err instanceof Error ? err.message : "Eliminazione non riuscita");
+      setError(photoErrorMessage(err, "Eliminazione non riuscita. Riprova."));
     } finally {
       setDeletingId(null);
       setConfirmingId(null);

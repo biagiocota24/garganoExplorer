@@ -7,9 +7,12 @@ import {
   markNotificationAsRead,
   type AppNotification,
 } from "../api/notification";
-import LoadingSpinner from "../components/Loadingspinner";
+import LoadingState from "../components/feedback/LoadingState";
+import ErrorState from "../components/feedback/ErrorState";
+import EmptyState from "../components/feedback/EmptyState";
+import { getErrorMessage } from "../api/errors";
 import NotificationItem from "../components/notificationItem/NotificationItem";
-import { useNotificationStore } from "../stores/noticationStore";
+import { useNotificationStore } from "../stores/notificationStore";
 
 type Filter = "all" | "unread";
 
@@ -20,6 +23,7 @@ const NotificationPage = () => {
   const [busyId, setBusyId] = useState<string | null>(null);
   const [isMarkingAll, setIsMarkingAll] = useState(false);
   const [actionError, setActionError] = useState<string | null>(null);
+  const [errorMessage, setErrorMessage] = useState("");
   const [reloadKey, setReloadKey] = useState(0);
 
   const setUnreadCount = useNotificationStore((state) => state.setUnreadCount);
@@ -34,8 +38,9 @@ const NotificationPage = () => {
         setNotifications(result);
         setUnreadCount(result.filter((n) => !n.read).length);
         setStatus("success");
-      } catch {
+      } catch (err) {
         if (ignore) return;
+        setErrorMessage(getErrorMessage(err, "Impossibile caricare le notifiche."));
         setStatus("error");
       }
     };
@@ -59,8 +64,10 @@ const NotificationPage = () => {
       const updated = notifications.map((n) => (n.id === id ? { ...n, read: true } : n));
       setNotifications(updated);
       setUnreadCount(updated.filter((n) => !n.read).length);
-    } catch {
-      setActionError("Non è stato possibile aggiornare la notifica. Riprova.");
+    } catch (err) {
+      setActionError(
+        getErrorMessage(err, "Impossibile aggiornare la notifica. Riprova."),
+      );
     } finally {
       setBusyId(null);
     }
@@ -73,8 +80,10 @@ const NotificationPage = () => {
       await markAllNotificationsAsRead();
       setNotifications(notifications.map((n) => ({ ...n, read: true })));
       setUnreadCount(0);
-    } catch {
-      setActionError("Non è stato possibile aggiornare le notifiche. Riprova.");
+    } catch (err) {
+      setActionError(
+        getErrorMessage(err, "Impossibile aggiornare le notifiche. Riprova."),
+      );
     } finally {
       setIsMarkingAll(false);
     }
@@ -91,8 +100,8 @@ const NotificationPage = () => {
           {status === "success" && (
             <p>
               {unreadCount > 0
-                ? `Hai ${unreadCount} ${unreadCount === 1 ? "notifica" : "notifiche"} da leggere`
-                : "Sei in pari: nessuna notifica da leggere"}
+                ? `Hai ${unreadCount} ${unreadCount === 1 ? "notifica" : "notifiche"} da leggere.`
+                : "Sei in pari: nessuna notifica da leggere."}
             </p>
           )}
         </div>
@@ -121,23 +130,16 @@ const NotificationPage = () => {
         </Alert>
       )}
 
-      {status === "loading" && <LoadingSpinner text="Caricamento in corso..." variant="primary" />}
+      {status === "loading" && <LoadingState />}
 
-      {status === "error" && (
-        <Alert variant="danger" className="d-flex justify-content-between align-items-center gap-3">
-          <span>Non è stato possibile caricare le notifiche.</span>
-          <Button variant="outline-danger" size="sm" onClick={handleRetry}>
-            Riprova
-          </Button>
-        </Alert>
-      )}
+      {status === "error" && <ErrorState message={errorMessage} onRetry={handleRetry} />}
 
       {status === "success" && notifications.length === 0 && (
-        <div className="notifications-empty">
-          <IoNotificationsOffOutline size={44} aria-hidden="true" />
-          <h2>Nessuna notifica</h2>
-          <p className="mb-0">Quando ci saranno novità sulle tue attività, le troverai qui.</p>
-        </div>
+        <EmptyState
+          icon={IoNotificationsOffOutline}
+          title="Nessuna notifica"
+          message="Quando ci saranno novità sulle tue attività, le troverai qui."
+        />
       )}
 
       {status === "success" && notifications.length > 0 && (
@@ -162,11 +164,11 @@ const NotificationPage = () => {
           </div>
 
           {visible.length === 0 ? (
-            <div className="notifications-empty">
-              <IoCheckmarkDoneOutline size={44} aria-hidden="true" />
-              <h2>Tutto letto</h2>
-              <p className="mb-0">Non hai notifiche da leggere.</p>
-            </div>
+            <EmptyState
+              icon={IoCheckmarkDoneOutline}
+              title="Tutto letto"
+              message="Non hai notifiche da leggere."
+            />
           ) : (
             <ListGroup className="notifications-list">
               {visible.map((n) => (

@@ -2,6 +2,7 @@ import { useState } from "react";
 import type { FormEvent } from "react";
 import { Alert, Button, Form, Spinner } from "react-bootstrap";
 import { ApiError } from "../../api/client";
+import { getErrorMessage } from "../../api/errors";
 import type { PlaceType, ReviewInput } from "../../api/review";
 import StarRatingInput from "../starRating/StarRatingInput";
 
@@ -50,9 +51,9 @@ const ReviewForm = ({
       } else if (err instanceof ApiError && err.status === 403) {
         setError("Non puoi recensire questo luogo.");
       } else if (err instanceof ApiError && err.status === 400) {
-        setError("Controlla i dati inseriti e riprova.");
+        setError(getErrorMessage(err, "Controlla i dati inseriti e riprova."));
       } else {
-        setError("Invio non riuscito. Riprova tra poco.");
+        setError(getErrorMessage(err, "Invio non riuscito. Riprova tra poco."));
       }
     } finally {
       setIsSubmitting(false);

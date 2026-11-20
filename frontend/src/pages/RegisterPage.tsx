@@ -3,6 +3,7 @@ import type { AccountType } from "../api/auth";
 import { useState } from "react";
 import * as auth from "../api/auth";
 import { ApiError } from "../api/client";
+import { getErrorMessage } from "../api/errors";
 import AuthLayout from "../components/AuthLayout";
 import { Alert, Button, Form } from "react-bootstrap";
 
@@ -36,11 +37,9 @@ const RegisterPage = function () {
       });
       navigate("/login", { state: { registered: true } });
     } catch (err) {
+      setError(getErrorMessage(err, "Registrazione non riuscita. Riprova."));
       if (err instanceof ApiError) {
-        setError(err.message);
         setFieldErrors(err.fieldErrors ?? null);
-      } else {
-        setError("Impossibile contattare il server");
       }
     } finally {
       setIsSubmitting(false);
@@ -123,7 +122,7 @@ const RegisterPage = function () {
           </Form.Select>
         </Form.Group>
         <Button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? "Registrazione in corso..." : "Registrati"}
+          {isSubmitting ? "Registrazione in corso…" : "Registrati"}
         </Button>
       </Form>
       <p className="text-center mt-4 mb-0">

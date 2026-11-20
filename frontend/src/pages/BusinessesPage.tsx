@@ -1,6 +1,9 @@
 import { useEffect, useState } from "react";
-import { Alert, Button, Col, Form, Row } from "react-bootstrap";
-import LoadingSpinner from "../components/Loadingspinner";
+import { Button, Col, Form, Row } from "react-bootstrap";
+import LoadingState from "../components/feedback/LoadingState";
+import ErrorState from "../components/feedback/ErrorState";
+import EmptyState from "../components/feedback/EmptyState";
+import { getErrorMessage } from "../api/errors";
 import {
   businessCategoryTranslations,
   priceRangeDescriptions,
@@ -21,6 +24,8 @@ const BusinessesPage = () => {
   const [status, setStatus] = useState<"loading" | "success" | "error">(
     "loading",
   );
+  const [errorMessage, setErrorMessage] = useState("");
+  const [reloadKey, setReloadKey] = useState(0);
 
   const [searchParams, setSearchParams] = useSearchParams();
   const town = searchParams.get("town") as Town | null;
@@ -59,6 +64,11 @@ const BusinessesPage = () => {
     window.scrollTo({ top: 0, behavior: "smooth" });
   };
 
+  const handleRetry = () => {
+    setStatus("loading");
+    setReloadKey((key) => key + 1);
+  };
+
   useEffect(() => {
     let ignore = false;
     const loadBusinesses = async () => {
@@ -71,8 +81,9 @@ const BusinessesPage = () => {
         if (ignore) return;
         setData(result);
         setStatus("success");
-      } catch {
+      } catch (err) {
         if (ignore) return;
+        setErrorMessage(getErrorMessage(err, "Impossibile caricare le attività."));
         setStatus("error");
       }
     };
@@ -81,7 +92,7 @@ const BusinessesPage = () => {
     return () => {
       ignore = true;
     };
-  }, [town, category, page]);
+  }, [town, category, page, reloadKey]);
 
   return (
     <>
@@ -133,51 +144,41 @@ const BusinessesPage = () => {
       </Row>
 
       {status === "error" && (
-        <Alert
-          variant="danger"
-          className="d-flex justify-content-center align-items-center mt-5"
-          style={{ height: "200px" }}
-        >
-          Caricamento attività non riuscito!
-        </Alert>
+        <ErrorState message={errorMessage} onRetry={handleRetry} />
       )}
 
-      {status === "loading" && (
-        <LoadingSpinner text="Caricamento in corso..." variant="primary" />
-      )}
+      {status === "loading" && <LoadingState />}
 
       {status === "success" && data && data.content.length === 0 && (
-        <Alert
-          variant="info"
-          className="d-flex flex-column justify-content-center align-items-center mt-5"
-          style={{ height: "200px" }}
+        <EmptyState
+          message={hasFilters ? "Nessuna attività trovata con i filtri selezionati." : "Nessuna attività trovata."}
+          action={
+            hasFilters && (
+              <Button variant="outline-secondary" onClick={removeFilters}>
+                Azzera filtri
+              </Button>
+            )
+          }
         >
-          {hasFilters ? (
-            <>
-              <span>Nessuna attività trovata per:</span>
-              <ul className="m-0 mt-2">
-                {town && (
-                  <li>
-                    Comune:{" "}
-                    <span className="fw-semibold">
-                      {townTranslations[town]}
-                    </span>
-                  </li>
-                )}
-                {category && (
-                  <li>
-                    Categoria:{" "}
-                    <span className="fw-semibold">
-                      {businessCategoryTranslations[category]}
-                    </span>
-                  </li>
-                )}
-              </ul>
-            </>
-          ) : (
-            "Nessuna attività trovata"
+          {hasFilters && (
+            <ul>
+              {town && (
+                <li>
+                  Comune:{" "}
+                  <span className="fw-semibold">{townTranslations[town]}</span>
+                </li>
+              )}
+              {category && (
+                <li>
+                  Categoria:{" "}
+                  <span className="fw-semibold">
+                    {businessCategoryTranslations[category]}
+                  </span>
+                </li>
+              )}
+            </ul>
           )}
-        </Alert>
+        </EmptyState>
       )}
 
       {status === "success" && data && data.content.length > 0 && (
@@ -198,8 +199,7 @@ const BusinessesPage = () => {
                       ? optimizedImage(b.photos[0].url, 600, 400)
                       : undefined
                   }
-                  avgRating={b.averageRating ?? undefined}
-                  reviewCount={b.reviewCount}
+                  rating={{ average: b.averageRating, count: b.reviewCount }}
                 />
               </Col>
             ))}
