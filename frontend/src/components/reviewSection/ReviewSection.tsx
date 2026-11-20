@@ -308,7 +308,7 @@ const ReviewSection = ({
         title="Eliminare la recensione?"
         children="L'operazione non è reversibile."
         confirmLabel="Elimina"
-        isLoading={isDeleting}
+        isProcessing={isDeleting}
         onConfirm={handleConfirmDelete}
         onCancel={() => setToDelete(null)}
       />

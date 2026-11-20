@@ -198,7 +198,7 @@ const BusinessesPage = () => {
                       ? optimizedImage(b.photos[0].url, 600, 400)
                       : undefined
                   }
-                  avgRating={b.averageRating}
+                  avgRating={b.averageRating ?? undefined}
                   reviewCount={b.reviewCount}
                 />
               </Col>

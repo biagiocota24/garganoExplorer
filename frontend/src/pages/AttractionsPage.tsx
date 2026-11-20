@@ -199,6 +199,7 @@ const AttractionsPage = () => {
                   description={a.description}
                   tone={a.category}
                   imageUrl={a.photos[0] ? optimizedImage(a.photos[0].url, 600, 400) : undefined}
+                  reviewCount={a.reviewCount}
                 />
               </Col>
             ))}

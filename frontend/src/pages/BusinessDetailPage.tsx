@@ -143,11 +143,13 @@ const BusinessDetailsPage = () => {
                       <dt>Valutazione</dt>
                       <dd>
                         <a href="#reviews">
-                          <StarRating
-                            reviewCount={business.reviewCount}
-                            value={business.averageRating}
-                            showValue
-                          />
+                          {business.averageRating !== null && (
+                            <StarRating
+                              reviewCount={business.reviewCount}
+                              value={business.averageRating}
+                              showValue
+                            />
+                          )}
                         </a>
                       </dd>
                     </div>

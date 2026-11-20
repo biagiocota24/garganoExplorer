@@ -66,7 +66,7 @@ const ReviewItem = ({
               {formatRelativeTimeReview(review.createdAt)}
             </time>
             {wasEdited && (
-              <span className="review-item__edited" title={`Modificata ${formatFullDate(review.updatedAt)}`}>
+              <span className="review-item__edited" title={`Modificata ${formatFullDateReview(review.updatedAt)}`}>
                 · modificata
               </span>
             )}

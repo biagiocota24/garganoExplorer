@@ -88,6 +88,8 @@ const MyBusinessesPage = () => {
                   tone={b.category}
                   extra={b.priceRange && priceRangeDescriptions[b.priceRange]}
                   imageUrl={b.photos[0] ? optimizedImage(b.photos[0].url, 600, 400) : undefined}
+                  reviewCount={b.reviewCount}
+                  avgRating={b.averageRating ?? undefined}
                 />
             </Col>
           ))}

@@ -14,8 +14,8 @@ type Props = {
   tone?: string;
   /** Contenuto extra sopra "Scopri di più" (es. prezzo, valutazione) */
   extra?: ReactNode;
-  avgRating: number;
-  reviewCount: number;
+  avgRating?: number;
+  reviewCount?: number;
 };
 
 const PlaceCard = ({
