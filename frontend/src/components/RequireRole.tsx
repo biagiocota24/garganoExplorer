@@ -1,6 +1,6 @@
 import { Navigate, Outlet } from "react-router";
 import { useAuthStore } from "../stores/authStore";
-import LoadingSpinner from "./Loadingspinner";
+import LoadingState from "./feedback/LoadingState";
 import type { Role } from "../api/auth";
 
 type Props = {
@@ -12,7 +12,7 @@ const RequireRole = ({ roles }: Props) => {
   const role = useAuthStore((state) => state.user?.role);
 
   if (status === "loading") {
-    return <LoadingSpinner text="Caricamento in corso..." variant="primary" />;
+    return <LoadingState />;
   }
 
   if (status === "anonymous") {

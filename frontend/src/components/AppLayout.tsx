@@ -2,7 +2,7 @@ import { Button, Container, Nav, Navbar } from "react-bootstrap";
 import { Link, NavLink, Outlet, useLocation, useNavigate } from "react-router";
 import { useAuthStore } from "../stores/authStore";
 import { useEffect, useRef, useState } from "react";
-import { useNotificationStore } from "../stores/noticationStore";
+import { useNotificationStore } from "../stores/notificationStore";
 import NotificationBell from "./NotificationBell";
 
 const AppLayout = () => {
@@ -77,7 +77,7 @@ const AppLayout = () => {
                 onClick={() => {
                   setExpanded(false);
                 }}
-                aria-label={`Notifiche,${unreadCount} non lette`}
+                aria-label={`Notifiche, ${unreadCount} non lette`}
               >
                 <NotificationBell count={unreadCount} />
               </Nav.Link>
@@ -99,7 +99,6 @@ const AppLayout = () => {
               <Nav.Link
                 as={NavLink}
                 to="/attractions"
-                end
                 onClick={() => {
                   setExpanded(false);
                 }}
@@ -109,7 +108,6 @@ const AppLayout = () => {
               <Nav.Link
                 as={NavLink}
                 to="/businesses"
-                end
                 onClick={() => {
                   setExpanded(false);
                 }}
@@ -119,7 +117,6 @@ const AppLayout = () => {
               <Nav.Link
                 as={NavLink}
                 to="/map"
-                end
                 onClick={() => {
                   setExpanded(false);
                 }}
@@ -130,7 +127,6 @@ const AppLayout = () => {
                 <Nav.Link
                   as={NavLink}
                   to="/my-businesses"
-                  end
                   onClick={() => {
                     setExpanded(false);
                   }}
@@ -150,7 +146,7 @@ const AppLayout = () => {
                   onClick={() => {
                     setExpanded(false);
                   }}
-                  aria-label={`Notifiche,${unreadCount} non lette`}
+                  aria-label={`Notifiche, ${unreadCount} non lette`}
                 >
                   <NotificationBell count={unreadCount} />
                 </Nav.Link>

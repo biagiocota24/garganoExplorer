@@ -13,7 +13,9 @@ import {
   type AttractionRequest,
 } from "../api/attraction";
 import { ApiError } from "../api/client";
-import LoadingSpinner from "../components/Loadingspinner";
+import LoadingState from "../components/feedback/LoadingState";
+import ErrorState from "../components/feedback/ErrorState";
+import { getErrorMessage } from "../api/errors";
 import type { Town } from "../api/types";
 import PhotoManager from "../components/photoManager/PhotoManager";
 import type { Photo } from "../api/photo";
@@ -37,6 +39,8 @@ const AttractionFormPage = () => {
   const [loadStatus, setLoadStatus] = useState<
     "loading" | "ready" | "notFound" | "error"
   >(isEdit ? "loading" : "ready");
+  const [loadError, setLoadError] = useState("");
+  const [reloadKey, setReloadKey] = useState(0);
   const [isSubmitting, setIsSubmitting] = useState(false);
   const [error, setError] = useState<string | null>(null);
   const [fieldErrors, setFieldErrors] = useState<Record<string, string>>({});
@@ -72,6 +76,7 @@ const AttractionFormPage = () => {
         if (err instanceof ApiError && err.status === 404) {
           setLoadStatus("notFound");
         } else {
+          setLoadError(getErrorMessage(err, "Impossibile caricare l'attrazione."));
           setLoadStatus("error");
         }
       }
@@ -81,7 +86,12 @@ const AttractionFormPage = () => {
     return () => {
       ignore = true;
     };
-  }, [id]);
+  }, [id, reloadKey]);
+
+  const handleRetry = () => {
+    setLoadStatus("loading");
+    setReloadKey((key) => key + 1);
+  };
 
   const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
     e.preventDefault();
@@ -92,13 +102,13 @@ const AttractionFormPage = () => {
     const lat = toCoordinate(latitude);
     const lng = toCoordinate(longitude);
 
-    if (!town) errors.town = "Seleziona un comune";
-    if (!category) errors.category = "Seleziona una categoria";
+    if (!town) errors.town = "Seleziona un comune.";
+    if (!category) errors.category = "Seleziona una categoria.";
     if (lat !== null && Number.isNaN(lat)) {
-      errors.latitude = "Inserisci un numero valido (es. 41.72)";
+      errors.latitude = "Inserisci un numero valido (es. 41.72).";
     }
     if (lng !== null && Number.isNaN(lng)) {
-      errors.longitude = "Inserisci un numero valido (es. 16.06)";
+      errors.longitude = "Inserisci un numero valido (es. 16.06).";
     }
 
     if (Object.keys(errors).length > 0 || !town || !category) {
@@ -131,10 +141,8 @@ const AttractionFormPage = () => {
     } catch (err) {
       if (err instanceof ApiError && err.fieldErrors) {
         setFieldErrors(err.fieldErrors);
-      } else if (err instanceof ApiError && err.status === 403) {
-        setError("Non hai i permessi per questa operazione.");
       } else {
-        setError("Salvataggio non riuscito. Riprova tra poco.");
+        setError(getErrorMessage(err, "Salvataggio non riuscito. Riprova tra poco."));
       }
     } finally {
       setIsSubmitting(false);
@@ -142,17 +150,27 @@ const AttractionFormPage = () => {
   };
 
   if (loadStatus === "loading") {
-    return <LoadingSpinner text="Caricamento in corso..." variant="primary" />;
+    return <LoadingState />;
   }
 
-  if (loadStatus === "notFound" || loadStatus === "error") {
+  if (loadStatus === "notFound") {
     return (
-      <Alert variant={loadStatus === "notFound" ? "info" : "danger"} className="mt-5">
-        {loadStatus === "notFound"
-          ? "Attrazione non trovata."
-          : "Impossibile caricare l'attrazione."}{" "}
-        <Link to="/attractions">Torna alle attrazioni</Link>
-      </Alert>
+      <ErrorState
+        message="Attrazione non trovata."
+        backTo="/attractions"
+        backLabel="Torna alle attrazioni"
+      />
+    );
+  }
+
+  if (loadStatus === "error") {
+    return (
+      <ErrorState
+        message={loadError}
+        onRetry={handleRetry}
+        backTo="/attractions"
+        backLabel="Torna alle attrazioni"
+      />
     );
   }
 
@@ -163,7 +181,7 @@ const AttractionFormPage = () => {
       <h1 className="mb-4">{isEdit ? "Modifica attrazione" : "Nuova attrazione"}</h1>
 
       {justCreated && (
-        <Alert variant="success">Attrazione creata! Ora aggiungi qualche foto qui sotto.</Alert>
+        <Alert variant="success">Attrazione creata. Ora aggiungi qualche foto qui sotto.</Alert>
       )}
 
       <Card className="ge-card">
@@ -293,7 +311,7 @@ const AttractionFormPage = () => {
                 Annulla
               </Link>
               <Button type="submit" disabled={isSubmitting}>
-                {isSubmitting ? "Salvataggio..." : isEdit ? "Salva modifiche" : "Crea attrazione"}
+                {isSubmitting ? "Salvataggio…" : isEdit ? "Salva modifiche" : "Crea attrazione"}
               </Button>
             </div>
           </Form>

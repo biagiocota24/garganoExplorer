@@ -1,5 +1,5 @@
 import { useEffect, useState } from "react";
-import { Alert, Button, Form, Spinner } from "react-bootstrap";
+import { Alert, Button, Form } from "react-bootstrap";
 import { useAuthStore } from "../../stores/authStore";
 import ReviewItem from "./ReviewItem";
 import { Link, useLocation } from "react-router";
@@ -11,6 +11,10 @@ import {
   type ReviewInput,
 } from "../../api/review";
 import ConfirmModal from "../ConfirmModal";
+import LoadingState from "../feedback/LoadingState";
+import ErrorState from "../feedback/ErrorState";
+import EmptyState from "../feedback/EmptyState";
+import { getErrorMessage } from "../../api/errors";
 
 type ReviewSectionProps = {
   placeType: PlaceType;
@@ -51,6 +55,8 @@ const ReviewSection = ({
   const [status, setStatus] = useState<Status>("loading");
   const [loadingMore, setLoadingMore] = useState(false);
   const [filter, setFilter] = useState<SortOption>("recenti");
+  const [errorMessage, setErrorMessage] = useState("");
+  const [reloadKey, setReloadKey] = useState(0);
 
   // STATI PER CREAZIONE, MODIFICA E ELIMINAZIONE
   const location = useLocation();
@@ -98,8 +104,10 @@ const ReviewSection = ({
         setPage(0);
         setHasMore(result.page.number + 1 < result.page.totalPages);
         setStatus("success");
-      } catch {
-        if (!ignore) setStatus("error");
+      } catch (err) {
+        if (ignore) return;
+        setErrorMessage(getErrorMessage(err, "Impossibile caricare le recensioni."));
+        setStatus("error");
       }
     };
 
@@ -107,11 +115,17 @@ const ReviewSection = ({
     return () => {
       ignore = true;
     };
-  }, [api, placeId, filter]);
+  }, [api, placeId, filter, reloadKey]);
+
+  const handleRetry = () => {
+    setStatus("loading");
+    setReloadKey((key) => key + 1);
+  };
 
   // PAGINE SUCCESSIVE
   const loadMore = async () => {
     setLoadingMore(true);
+    setActionError(null);
     try {
       const nextPage = page + 1;
       const result = await api.getList(placeId, nextPage, SORT_PARAMS[filter]);
@@ -124,6 +138,8 @@ const ReviewSection = ({
       });
       setPage(nextPage);
       setHasMore(result.page.number + 1 < result.page.totalPages);
+    } catch (err) {
+      setActionError(getErrorMessage(err, "Impossibile caricare le recensioni."));
     } finally {
       setLoadingMore(false);
     }
@@ -164,8 +180,8 @@ const ReviewSection = ({
       setReviewCount((count) => Math.max(count - 1, 0));
       onStatsChange?.();
       setToDelete(null);
-    } catch {
-      setActionError("Eliminazione non riuscita. Riprova.");
+    } catch (err) {
+      setActionError(getErrorMessage(err, "Eliminazione non riuscita. Riprova."));
     } finally {
       setIsDeleting(false);
     }
@@ -186,7 +202,7 @@ const ReviewSection = ({
             setFilter(e.target.value as SortOption);
           }}
         >
-          <option value="recenti">Piu recenti</option>
+          <option value="recenti">Più recenti</option>
           <option value="vecchie">Meno recenti</option>
           {placeType === "business" && (
             <>
@@ -247,18 +263,15 @@ const ReviewSection = ({
       </div>
 
       {status === "loading" && (
-        <div className="text-center py-3">
-          <Spinner size="sm" className="me-2" />
-          Caricamento recensioni…
-        </div>
+        <LoadingState compact text="Caricamento delle recensioni…" />
       )}
 
       {status === "error" && (
-        <Alert variant="danger">Impossibile caricare le recensioni.</Alert>
+        <ErrorState compact message={errorMessage} onRetry={handleRetry} />
       )}
 
       {status === "success" && others.length === 0 && !myReview && (
-        <p className="text-muted mb-0">Nessuna recensione ancora.</p>
+        <EmptyState compact message="Nessuna recensione ancora." />
       )}
 
       {status === "success" && visible.length > 0 && (
@@ -287,7 +300,7 @@ const ReviewSection = ({
             onClick={loadMore}
             disabled={loadingMore}
           >
-            {loadingMore ? "Caricamento…" : "Carica altre recensioni"}
+            {loadingMore ? "Caricamento in corso…" : "Carica altre recensioni"}
           </Button>
         )}
 

@@ -1,8 +1,11 @@
 import { useEffect, useMemo, useState } from "react";
 import { getDetailsPlace, getMapPlaces, type MapPlace } from "../../api/map";
-import LoadingSpinner from "../../components/Loadingspinner";
-import { Alert, Button, Col, Form, Row } from "react-bootstrap";
-import { Link, useNavigate, useSearchParams } from "react-router";
+import { Button, Col, Form, Row } from "react-bootstrap";
+import { Link, useSearchParams } from "react-router";
+import LoadingState from "../../components/feedback/LoadingState";
+import ErrorState from "../../components/feedback/ErrorState";
+import EmptyState from "../../components/feedback/EmptyState";
+import { getErrorMessage } from "../../api/errors";
 import { MapContainer, Marker, Popup, TileLayer } from "react-leaflet";
 import "./MapPage.css";
 import { getMarkerIcon } from "../../components/map/markerIcons";
@@ -19,13 +22,13 @@ const GARGANO_CENTER: [number, number] = [41.8, 15.8];
 const DEFAULT_ZOOM = 10;
 
 const MapPage = () => {
-  const navigate = useNavigate();
   const [searchParams, setSearchParams] = useSearchParams();
 
   const [status, setStatus] = useState<"loading" | "error" | "success">(
     "loading",
   );
   const [places, setPlaces] = useState<MapPlace[]>([]);
+  const [errorMessage, setErrorMessage] = useState("");
 
   const town = searchParams.get("town") ?? "";
   const category = searchParams.get("category") ?? "";
@@ -79,8 +82,9 @@ const MapPage = () => {
         if (ignore) return;
         setPlaces(result);
         setStatus("success");
-      } catch {
+      } catch (err) {
         if (ignore) return;
+        setErrorMessage(getErrorMessage(err, "Impossibile caricare la mappa."));
         setStatus("error");
       }
     };
@@ -161,30 +165,29 @@ const MapPage = () => {
           </Col>
         )}
       </Row>
-      {status === "loading" && (
-        <LoadingSpinner text="Caricamento in corso..." variant="primary" />
-      )}
+      {status === "loading" && <LoadingState />}
       {status === "error" && (
-        <Alert variant="danger" className="mt-5">
-          Caricamento della mappa non riuscito.{" "}
-          <Button variant="link" onClick={() => setReloadKey((k) => k + 1)}>
-            Riprova
-          </Button>
-        </Alert>
+        <ErrorState
+          message={errorMessage}
+          onRetry={() => setReloadKey((k) => k + 1)}
+        />
       )}
       {status === "success" && places.length === 0 && (
-        <Alert variant="primary" className="mt-5">
-          Nessun luogo da mostrare sulla mappa.{" "}
-          <Button variant="link" onClick={() => navigate(0)}>
-            Ricarica la pagina
-          </Button>
-        </Alert>
+        <EmptyState message="Nessun luogo da mostrare sulla mappa." />
       )}
-      {filteredPlaces.length === 0 && places.length > 0 && (
-        <Alert variant="warning">
-          Nessun risultato per i filtri selezionati
-        </Alert>
-      )}
+      {status === "success" &&
+        places.length > 0 &&
+        filteredPlaces.length === 0 && (
+          <EmptyState
+            compact
+            message="Nessun luogo trovato con i filtri selezionati."
+            action={
+              <Button variant="outline-secondary" onClick={removeFilters}>
+                Azzera filtri
+              </Button>
+            }
+          />
+        )}
       {status === "success" && places.length > 0 && (
         <div className="map-page_mappa">
           <MapContainer

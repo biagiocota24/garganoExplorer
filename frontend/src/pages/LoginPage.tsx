@@ -2,6 +2,7 @@ import { useState } from "react";
 import { useAuthStore } from "../stores/authStore";
 import { Link, useLocation, useNavigate } from "react-router";
 import { ApiError } from "../api/client";
+import { getErrorMessage } from "../api/errors";
 import AuthLayout from "../components/AuthLayout";
 import { Alert, Button, Form } from "react-bootstrap";
 
@@ -25,11 +26,12 @@ const LoginPage = function () {
       await login({ email, password });
       navigate("/profile");
     } catch (err) {
-      setError(
-        err instanceof ApiError
-          ? err.message
-          : "Impossibile contattare il server",
-      );
+      // 401 al login significa credenziali errate, non sessione scaduta
+      if (err instanceof ApiError && err.status === 401) {
+        setError("Email o password non valide.");
+      } else {
+        setError(getErrorMessage(err, "Accesso non riuscito. Riprova."));
+      }
     } finally {
       setIsSubmitting(false);
     }
@@ -42,7 +44,7 @@ const LoginPage = function () {
         <p className="text-secondary">Accedi al tuo account</p>
       </div>
       {justRegistered && (
-        <Alert variant="success">Account creato, ora accedi</Alert>
+        <Alert variant="success">Account creato. Ora accedi.</Alert>
       )}
       {error !== null && <Alert variant="danger">{error}</Alert>}
 
@@ -68,7 +70,7 @@ const LoginPage = function () {
           />
         </Form.Group>
         <Button type="submit" disabled={isSubmitting}>
-          {isSubmitting ? "Accesso in corso ..." : "Accedi"}
+          {isSubmitting ? "Accesso in corso…" : "Accedi"}
         </Button>
       </Form>
       <p className="text-center mt-4 mb-0">

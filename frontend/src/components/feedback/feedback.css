@@ -1,0 +1,101 @@
+/* ---------- Stati della pagina: caricamento, errore, vuoto ---------- */
+.feedback-state {
+  margin-block: 1.5rem;
+}
+
+/* Versione compatta, per i pannelli interni (es. recensioni) */
+.feedback-state--compact {
+  margin-block: 0.75rem;
+}
+
+/* Caricamento */
+.feedback-state--loading {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 0.75rem;
+  padding: 3rem 1rem;
+  color: var(--ge-text-muted);
+  text-align: center;
+}
+
+.feedback-state--loading.feedback-state--compact {
+  flex-direction: row;
+  justify-content: center;
+  padding: 1rem;
+}
+
+.feedback-state__spinner {
+  color: var(--ge-primary);
+}
+
+/* Errore */
+.feedback-state--error {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  justify-content: space-between;
+  gap: 0.75rem 1rem;
+}
+
+/* Vuoto */
+.feedback-state--empty {
+  padding: 3rem 1.5rem;
+  background: #fff;
+  border: 1px solid var(--bs-border-color);
+  border-radius: 1rem;
+  text-align: center;
+  color: var(--bs-secondary-color);
+}
+
+.feedback-state--empty.feedback-state--compact {
+  padding: 1.5rem 1rem;
+}
+
+.feedback-state__icon {
+  margin-bottom: 0.75rem;
+  color: var(--ge-primary);
+  opacity: 0.55;
+}
+
+.feedback-state__title {
+  margin-bottom: 0.35rem;
+  font-family: "Outfit", sans-serif;
+  font-size: 1.15rem;
+  font-weight: 700;
+  color: var(--bs-body-color);
+}
+
+.feedback-state__message {
+  margin: 0;
+}
+
+.feedback-state__extra {
+  margin-top: 0.75rem;
+}
+
+.feedback-state__extra ul {
+  display: inline-block;
+  margin: 0;
+  text-align: left;
+}
+
+/* Azioni (Riprova, Torna a…, Azzera filtri) */
+.feedback-state__actions {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: center;
+  gap: 0.75rem;
+}
+
+.feedback-state--empty .feedback-state__actions {
+  justify-content: center;
+  margin-top: 1.25rem;
+}
+
+.feedback-state__link {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.35rem;
+  font-weight: 600;
+}

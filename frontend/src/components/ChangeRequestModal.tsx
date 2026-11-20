@@ -1,6 +1,7 @@
 import { useState } from "react";
 import { Alert, Button, Form, Modal, Spinner } from "react-bootstrap";
 import { ApiError } from "../api/client";
+import { getErrorMessage } from "../api/errors";
 import { requestBusinessChange } from "../api/notification";
 
 const MAX_MESSAGE = 1000;
@@ -51,10 +52,10 @@ const ChangeRequestModal = ({ show, businessId, businessName, onClose, onSent }:
         setFieldError(err.fieldErrors.message);
       } else if (err instanceof ApiError && err.status === 404) {
         setError("Questa attività non esiste più.");
-      } else if (err instanceof ApiError && (err.status === 401 || err.status === 403)) {
+      } else if (err instanceof ApiError && err.status === 403) {
         setError("Non hai i permessi per inviare segnalazioni.");
       } else {
-        setError("Invio non riuscito. Riprova tra poco.");
+        setError(getErrorMessage(err, "Invio non riuscito. Riprova tra poco."));
       }
       setIsSending(false);
     }
@@ -112,7 +113,7 @@ const ChangeRequestModal = ({ show, businessId, businessName, onClose, onSent }:
             {isSending ? (
               <>
                 <Spinner size="sm" className="me-2" aria-hidden="true" />
-                Invio...
+                Invio…
               </>
             ) : (
               "Invia segnalazione"

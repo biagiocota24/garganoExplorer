@@ -7,7 +7,9 @@ import {
   getBusinessById,
   type Business,
 } from "../api/business";
-import LoadingSpinner from "../components/Loadingspinner";
+import LoadingState from "../components/feedback/LoadingState";
+import ErrorState from "../components/feedback/ErrorState";
+import { getErrorMessage } from "../api/errors";
 import PlaceDetail from "../components/placeDetail/PlaceDetail";
 import ConfirmModal from "../components/ConfirmModal";
 import {
@@ -29,6 +31,8 @@ const BusinessDetailsPage = () => {
     "loading" | "success" | "error" | "notFound"
   >("loading");
   const [business, setBusiness] = useState<Business | null>(null);
+  const [errorMessage, setErrorMessage] = useState("");
+  const [reloadKey, setReloadKey] = useState(0);
 
   const [showDelete, setShowDelete] = useState(false);
   const [isDeleting, setIsDeleting] = useState(false);
@@ -55,6 +59,9 @@ const BusinessDetailsPage = () => {
         if (error instanceof ApiError && error.status === 404) {
           setStatus("notFound");
         } else {
+          setErrorMessage(
+            getErrorMessage(error, "Impossibile caricare l'attività."),
+          );
           setStatus("error");
         }
       }
@@ -64,7 +71,12 @@ const BusinessDetailsPage = () => {
     return () => {
       ignore = true;
     };
-  }, [id]);
+  }, [id, reloadKey]);
+
+  const handleRetry = () => {
+    setStatus("loading");
+    setReloadKey((key) => key + 1);
+  };
 
   // Proprietario dell'attività oppure admin
   const isOwner = !!user && !!business && user.id === business.ownerId;
@@ -82,13 +94,12 @@ const BusinessDetailsPage = () => {
       const isOwner = user?.id === business.ownerId;
       navigate(isOwner ? "/my-businesses" : "/businesses", { replace: true });
     } catch (error) {
-      if (
-        error instanceof ApiError &&
-        (error.status === 401 || error.status === 403)
-      ) {
+      if (error instanceof ApiError && error.status === 403) {
         setDeleteError("Non hai i permessi per eliminare questa attività.");
       } else {
-        setDeleteError("Eliminazione non riuscita. Riprova.");
+        setDeleteError(
+          getErrorMessage(error, "Eliminazione non riuscita. Riprova."),
+        );
       }
       setIsDeleting(false);
     }
@@ -105,22 +116,23 @@ const BusinessDetailsPage = () => {
   };
   return (
     <>
-      {status === "loading" && (
-        <LoadingSpinner text="Caricamento in corso..." variant="primary" />
-      )}
+      {status === "loading" && <LoadingState />}
 
       {status === "error" && (
-        <Alert variant="danger" className="mt-5">
-          Caricamento dell'attività non riuscito.{" "}
-          <Link to="/businesses">Torna alle attività</Link>
-        </Alert>
+        <ErrorState
+          message={errorMessage}
+          onRetry={handleRetry}
+          backTo="/businesses"
+          backLabel="Torna alle attività"
+        />
       )}
 
       {status === "notFound" && (
-        <Alert variant="info" className="mt-5">
-          Attività non trovata.{" "}
-          <Link to="/businesses">Torna alle attività</Link>
-        </Alert>
+        <ErrorState
+          message="Attività non trovata."
+          backTo="/businesses"
+          backLabel="Torna alle attività"
+        />
       )}
 
       {status === "success" && business && (
