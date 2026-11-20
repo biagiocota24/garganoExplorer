@@ -15,6 +15,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -32,7 +33,7 @@ public class BusinessReviewService {
         if (!businessRepository.existsById(businessId)){
             throw new BusinessNotFoundException();
         }
-        Page<BusinessReview>  businessReviews = businessReviewRepository.findByBusinessIdOrderByCreatedAtDesc(businessId ,pageable);
+        Page<BusinessReview>  businessReviews = businessReviewRepository.findByBusinessId(businessId ,pageable);
         return businessReviews.map(BusinessReviewResponse::from);
     }
 
@@ -88,6 +89,15 @@ public class BusinessReviewService {
         businessReviewRepository.delete(reviewToDelete);
 
         updateReviewCountAndAverageRating(businessToUpdate);
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<BusinessReviewResponse> findMine(UUID authorId , UUID businessId){
+        if (!businessRepository.existsById(businessId)){
+            throw new BusinessNotFoundException();
+        }
+        return businessReviewRepository.findByAuthorIdAndBusinessId(authorId, businessId)
+                .map(BusinessReviewResponse::from);
     }
 
 

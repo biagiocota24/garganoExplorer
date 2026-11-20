@@ -17,6 +17,8 @@ import {
 } from "../constants/labels";
 import { useAuthStore } from "../stores/authStore";
 import ChangeRequestModal from "../components/ChangeRequestModal";
+import StarRating from "../components/starRating/StarRating";
+import ReviewSection from "../components/reviewSection/ReviewSection";
 
 const BusinessDetailsPage = () => {
   const { id } = useParams();
@@ -92,6 +94,15 @@ const BusinessDetailsPage = () => {
     }
   };
 
+  const refreshBusiness = async () => {
+    if (!id) return;
+    try {
+      const updated = await getBusinessById(id);
+      setBusiness(updated);
+    } catch {
+      // IN CASO DI ERRORE IL CONTEGGIO SI AGGIORNERA' AL PROSSIMO CARICAMENTO DI PAGINA. NON VALE LA PENA FARE NULLA
+    }
+  };
   return (
     <>
       {status === "loading" && (
@@ -127,6 +138,22 @@ const BusinessDetailsPage = () => {
               <>
                 <h2 className="place-detail__section-title">Informazioni</h2>
                 <dl className="info-list">
+                  {business.reviewCount > 0 && (
+                    <div>
+                      <dt>Valutazione</dt>
+                      <dd>
+                        <a href="#reviews">
+                          {business.averageRating !== null && (
+                            <StarRating
+                              reviewCount={business.reviewCount}
+                              value={business.averageRating}
+                              showValue
+                            />
+                          )}
+                        </a>
+                      </dd>
+                    </div>
+                  )}
                   <div>
                     <dt>Indirizzo</dt>
                     <dd>{business.address}</dd>
@@ -250,8 +277,14 @@ const BusinessDetailsPage = () => {
                 )}
               </>
             }
+            children={
+              <ReviewSection
+                placeType="business"
+                placeId={business.id}
+                onStatsChange={refreshBusiness}
+              />
+            }
           />
-
           <ConfirmModal
             show={showDelete}
             title="Eliminare questa attività?"

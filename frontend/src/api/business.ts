@@ -32,7 +32,9 @@ export type Business = {
   ownerId: string;
   createdAt: string;
   updatedAt: string;
-    photos: Photo[];
+  photos: Photo[];
+  reviewCount: number;
+  averageRating: number | null;
 };
 
 export type BusinessRequest = {
@@ -90,4 +92,3 @@ export const deleteBusiness = (businessId: string) => {
 export const getMyBusinesses = () => {
   return request<Business[]>("/api/businesses/mine");
 };
-

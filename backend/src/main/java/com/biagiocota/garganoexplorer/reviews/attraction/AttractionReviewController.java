@@ -5,8 +5,10 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Sort;
 import org.springframework.data.web.PageableDefault;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.web.bind.annotation.*;
@@ -21,8 +23,16 @@ public class AttractionReviewController {
 
     @GetMapping
     @ResponseStatus(HttpStatus.OK)
-    public Page<AttractionReviewResponse> findByAttraction(@PathVariable UUID attractionId , @PageableDefault Pageable pageable){
+    public Page<AttractionReviewResponse> findByAttraction(@PathVariable UUID attractionId , @PageableDefault(size = 10, sort = "createdAt", direction = Sort.Direction.DESC) Pageable pageable){
         return attractionReviewService.findByAttraction(attractionId , pageable);
+    }
+
+    @GetMapping("/mine")
+    @ResponseStatus(HttpStatus.OK)
+    public ResponseEntity<AttractionReviewResponse> findMine( @AuthenticationPrincipal UUID authorId , @PathVariable UUID attractionId){
+        return attractionReviewService.findMine(authorId, attractionId)
+                .map(r -> ResponseEntity.ok(r))
+                .orElse(ResponseEntity.noContent().build());
     }
 
     @PostMapping

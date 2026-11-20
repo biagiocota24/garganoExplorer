@@ -15,8 +15,10 @@ import {
 } from "../constants/labels";
 import { useAuthStore } from "../stores/authStore";
 import ConfirmModal from "../components/ConfirmModal";
+import ReviewSection from "../components/reviewSection/ReviewSection";
 
 const AttractionDetailsPage = () => {
+  const { id } = useParams();
   const role = useAuthStore((state) => state.user?.role);
   const [status, setStatus] = useState<
     "loading" | "success" | "error" | "notFound"
@@ -71,6 +73,17 @@ const AttractionDetailsPage = () => {
       setIsDeleting(false);
     }
   };
+
+  const refreshAttraction = async () => {
+    if (!id) return;
+    try {
+      const updated = await getAttractionById(id);
+      setAttraction(updated);
+    } catch {
+      // IN CASO DI ERRORE IL CONTEGGIO SI AGGIORNERA' AL PROSSIMO CARICAMENTO DI PAGINA. NON VALE LA PENA FARE NULLA
+    }
+  };
+
   return (
     <>
       {status === "error" && (
@@ -155,6 +168,13 @@ const AttractionDetailsPage = () => {
                   </>
                 )}
               </>
+            }
+            children={
+              <ReviewSection
+                placeType="attraction"
+                placeId={attraction.id}
+                onStatsChange={refreshAttraction}
+              />
             }
           />
           <ConfirmModal

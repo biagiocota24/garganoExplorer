@@ -13,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
+import java.util.Optional;
 import java.util.UUID;
 
 @Service
@@ -28,7 +29,7 @@ public class AttractionReviewService {
         if(!attractionRepository.existsById(attractionId)){
             throw new AttractionNotFoundException();
         }
-        Page<AttractionReview> attractionReviews = attractionReviewRepository.findByAttractionIdOrderByCreatedAtDesc(attractionId , pageable);
+        Page<AttractionReview> attractionReviews = attractionReviewRepository.findByAttractionId(attractionId , pageable);
         return attractionReviews.map(AttractionReviewResponse::from);
     }
 
@@ -77,6 +78,15 @@ public class AttractionReviewService {
         attractionReviewRepository.delete(reviewToDelete);
 
         updateReviewCount(attractionToUpdate);
+    }
+
+    @Transactional(readOnly = true)
+    public Optional<AttractionReviewResponse> findMine(UUID authorId , UUID attractionId){
+        if (!attractionRepository.existsById(attractionId)){
+            throw new AttractionNotFoundException();
+        }
+        return attractionReviewRepository.findByAuthorIdAndAttractionId(authorId,attractionId)
+                .map(AttractionReviewResponse :: from);
     }
 
 

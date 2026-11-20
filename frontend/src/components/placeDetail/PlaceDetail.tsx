@@ -15,6 +15,7 @@ type Props = {
   backLabel: string;
   /** Contenuto della colonna laterale (informazioni, contatti, ...) */
   aside?: ReactNode;
+  children?: ReactNode;
 };
 
 const PlaceDetail = ({
@@ -27,6 +28,7 @@ const PlaceDetail = ({
   backTo,
   backLabel,
   aside,
+  children,
 }: Props) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [failed, setFailed] = useState<string[]>([]);
@@ -100,7 +102,11 @@ const PlaceDetail = ({
                 aria-label={`Mostra foto ${i + 1}`}
                 aria-current={i === current}
               >
-                <img src={optimizedImage(src, 200, 150)} alt="" loading="lazy" />
+                <img
+                  src={optimizedImage(src, 200, 150)}
+                  alt=""
+                  loading="lazy"
+                />
               </button>
             ))}
           </div>
@@ -113,6 +119,7 @@ const PlaceDetail = ({
             <h2 className="place-detail__section-title">Descrizione</h2>
             <p className="place-detail__description">{description}</p>
           </section>
+          {children}
         </Col>
 
         {aside && (
