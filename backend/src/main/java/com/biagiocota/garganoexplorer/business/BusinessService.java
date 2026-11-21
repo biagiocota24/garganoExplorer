@@ -3,6 +3,7 @@ package com.biagiocota.garganoexplorer.business;
 import com.biagiocota.garganoexplorer.common.Town;
 import com.biagiocota.garganoexplorer.common.exception.ForbiddenOperationException;
 import com.biagiocota.garganoexplorer.common.tools.TextNormalizerTools;
+import com.biagiocota.garganoexplorer.favorite.business.FavoriteBusinessRepository;
 import com.biagiocota.garganoexplorer.notification.NotificationService;
 import com.biagiocota.garganoexplorer.notification.NotificationType;
 import com.biagiocota.garganoexplorer.photo.PhotoRequest;
@@ -28,6 +29,7 @@ public class BusinessService {
     private final NotificationService notificationService;
     private final PhotoService photoService;
     private final BusinessReviewRepository businessReviewRepository;
+    private final FavoriteBusinessRepository favoriteBusinessRepository;
 
     @Transactional(readOnly = true)
     public Page<BusinessResponse> findAll(Town town , BusinessCategory category , Pageable pageable){
@@ -77,6 +79,7 @@ public class BusinessService {
         Business businessToDelete = businessRepository.findById(id).orElseThrow(BusinessNotFoundException::new);
         checkCanDelete(businessToDelete , currentUserId ,isAdmin);
         photoService.deleteAll(businessToDelete.getPhotos());
+        favoriteBusinessRepository.deleteAllByBusinessId(businessToDelete.getId());
         businessReviewRepository.deleteAllByBusinessId(businessToDelete.getId());
         businessRepository.delete(businessToDelete);
     }

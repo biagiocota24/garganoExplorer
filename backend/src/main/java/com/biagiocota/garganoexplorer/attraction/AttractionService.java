@@ -2,6 +2,7 @@ package com.biagiocota.garganoexplorer.attraction;
 
 import com.biagiocota.garganoexplorer.common.Town;
 import com.biagiocota.garganoexplorer.common.tools.TextNormalizerTools;
+import com.biagiocota.garganoexplorer.favorite.attraction.FavoriteAttractionRepository;
 import com.biagiocota.garganoexplorer.photo.PhotoRequest;
 import com.biagiocota.garganoexplorer.photo.PhotoResponse;
 import com.biagiocota.garganoexplorer.photo.PhotoService;
@@ -24,6 +25,7 @@ public class AttractionService {
     private final AttractionRepository attractionRepository;
     private final PhotoService photoService;
     private final AttractionReviewRepository attractionReviewRepository;
+    private final FavoriteAttractionRepository favoriteAttractionRepository;
 
     @Transactional(readOnly = true)
     public Page<AttractionResponse> findAll(Town town, AttractionCategory attractionCategory, Pageable pageable) {
@@ -74,6 +76,7 @@ public class AttractionService {
     public void deleteAttraction(UUID id) {
         Attraction toDelete = attractionRepository.findById(id).orElseThrow(AttractionNotFoundException::new);
         photoService.deleteAll(toDelete.getPhotos());
+        favoriteAttractionRepository.deleteAllByAttractionId(toDelete.getId());
         attractionReviewRepository.deleteAllByAttractionId(toDelete.getId());
         attractionRepository.delete(toDelete);
     }
