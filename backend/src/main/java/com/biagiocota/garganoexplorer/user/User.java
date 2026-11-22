@@ -40,7 +40,11 @@ public class User {
     private Instant createdAt;
 
 
-    public  String getDisplayName(){
-        return this.getFirstName() + " " + this.getLastName().charAt(0);
+    public String getDisplayName() {
+        String first = this.firstName != null ? this.firstName.trim() : "";
+        if (this.lastName == null || this.lastName.trim().isEmpty()) {
+            return first;
+        }
+        return first + " " + Character.toUpperCase(this.lastName.trim().charAt(0)) + ".";
     }
 }

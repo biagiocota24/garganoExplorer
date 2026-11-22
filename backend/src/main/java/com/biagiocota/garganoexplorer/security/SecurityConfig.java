@@ -6,14 +6,12 @@ import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.http.HttpMethod;
-import org.springframework.http.HttpStatus;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.http.SessionCreationPolicy;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.security.web.authentication.HttpStatusEntryPoint;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
@@ -30,7 +28,7 @@ public class SecurityConfig {
     }
 
     @Bean
-    public SecurityFilterChain filterChain(HttpSecurity http, JwtService jwtService, UserRepository userRepository, AuthCookieProperties authCookieProperties) {
+    public SecurityFilterChain filterChain(HttpSecurity http, JwtService jwtService, UserRepository userRepository, AuthCookieProperties authCookieProperties, ProblemDetailAuthenticationEntryPoint authenticationEntryPoint, ProblemDetailAccessDeniedHandler accessDeniedHandler) {
         JwtAuthenticationFilter filter = new JwtAuthenticationFilter(jwtService, userRepository, authCookieProperties);
 
         // CSRF disabilitato: API stateless con cookie SameSite=Lax e frontend sullo stesso sito
@@ -59,7 +57,9 @@ public class SecurityConfig {
                         .requestMatchers("/api/map-places").permitAll()
                         .anyRequest().authenticated())
                 .addFilterBefore(filter, UsernamePasswordAuthenticationFilter.class)
-                .exceptionHandling(ex -> ex.authenticationEntryPoint(new HttpStatusEntryPoint(HttpStatus.UNAUTHORIZED)))
+                .exceptionHandling(ex -> ex
+                        .authenticationEntryPoint(authenticationEntryPoint)
+                        .accessDeniedHandler(accessDeniedHandler))
                 .cors(Customizer.withDefaults());
         return http.build();
     }

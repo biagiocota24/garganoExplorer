@@ -161,7 +161,9 @@ public class FavoriteIntegrationTest extends IntegrationTestSupport{
     @Test
     void getFavorites_withoutToken_returns401()throws Exception{
         mockMvc.perform(get("/api/favorites"))
-                .andExpect(status().isUnauthorized());
+                .andExpect(status().isUnauthorized())
+                .andExpect(jsonPath("$.title").value("Autenticazione richiesta"))
+                .andExpect(jsonPath("$.status").value(401));
     }
 
     @Test

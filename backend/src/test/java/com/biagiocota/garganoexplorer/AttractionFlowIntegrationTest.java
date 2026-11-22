@@ -74,7 +74,7 @@ public class AttractionFlowIntegrationTest extends IntegrationTestSupport {
                         .contentType(MediaType.APPLICATION_JSON)
                         .content(INVALID_BODY))
                 .andExpect(status().isBadRequest())
-                .andExpect(jsonPath("$.errors.description").exists());
+                .andExpect(jsonPath("$.errors.description").value("La descrizione deve contenere tra 200 e 5000 caratteri"));
     }
 
     @Test

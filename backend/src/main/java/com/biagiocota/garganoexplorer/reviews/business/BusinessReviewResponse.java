@@ -1,7 +1,5 @@
 package com.biagiocota.garganoexplorer.reviews.business;
 
-import com.biagiocota.garganoexplorer.user.User;
-
 import java.time.Instant;
 import java.util.UUID;
 

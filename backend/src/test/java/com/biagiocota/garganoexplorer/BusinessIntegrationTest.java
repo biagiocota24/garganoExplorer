@@ -63,7 +63,9 @@ public class BusinessIntegrationTest extends IntegrationTestSupport{
                 .cookie(cookie)
                 .contentType(MediaType.APPLICATION_JSON)
                 .content(VALID_BUSINESS_BODY))
-                .andExpect(status().isForbidden());
+                .andExpect(status().isForbidden())
+                .andExpect(jsonPath("$.title").value("Accesso negato"))
+                .andExpect(jsonPath("$.status").value(403));
     }
 
     @Test

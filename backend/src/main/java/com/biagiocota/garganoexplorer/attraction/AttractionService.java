@@ -7,14 +7,11 @@ import com.biagiocota.garganoexplorer.photo.PhotoRequest;
 import com.biagiocota.garganoexplorer.photo.PhotoResponse;
 import com.biagiocota.garganoexplorer.photo.PhotoService;
 import com.biagiocota.garganoexplorer.reviews.attraction.AttractionReviewRepository;
-import com.biagiocota.garganoexplorer.reviews.attraction.AttractionReviewService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.ResponseStatus;
 
 import java.util.List;
 import java.util.UUID;
