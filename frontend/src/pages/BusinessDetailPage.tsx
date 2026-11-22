@@ -146,6 +146,8 @@ const BusinessDetailsPage = () => {
             backTo="/businesses"
             backLabel="Torna alle attività"
             images={business.photos.map((photo) => photo.url)}
+            id={business.id}
+            placeType="business"
             aside={
               <>
                 <h2 className="place-detail__section-title">Informazioni</h2>

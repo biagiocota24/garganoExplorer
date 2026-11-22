@@ -84,7 +84,9 @@ const AttractionsPage = () => {
         setStatus("success");
       } catch (err) {
         if (ignore) return;
-        setErrorMessage(getErrorMessage(err, "Impossibile caricare le attrazioni."));
+        setErrorMessage(
+          getErrorMessage(err, "Impossibile caricare le attrazioni."),
+        );
         setStatus("error");
       }
     };
@@ -105,7 +107,12 @@ const AttractionsPage = () => {
           </span>
         </div>
         {isAdmin && (
-          <NavLink to="/admin/attractions/new" className="btn btn-outline-primary">+ Nuova attrazione</NavLink>
+          <NavLink
+            to="/admin/attractions/new"
+            className="btn btn-outline-primary"
+          >
+            + Nuova attrazione
+          </NavLink>
         )}
       </div>
 
@@ -157,7 +164,11 @@ const AttractionsPage = () => {
 
       {status === "success" && data && data.content.length === 0 && (
         <EmptyState
-          message={hasFilters ? "Nessuna attrazione trovata con i filtri selezionati." : "Nessuna attrazione trovata."}
+          message={
+            hasFilters
+              ? "Nessuna attrazione trovata con i filtri selezionati."
+              : "Nessuna attrazione trovata."
+          }
           action={
             hasFilters && (
               <Button variant="outline-secondary" onClick={removeFilters}>
@@ -190,7 +201,7 @@ const AttractionsPage = () => {
       {status === "success" && data && data.content.length > 0 && (
         <>
           <Row xs={1} sm={2} md={3} xl={4} className="g-4 mt-2">
-            {data.content.map((a:Attraction) => (
+            {data.content.map((a: Attraction) => (
               <Col key={a.id}>
                 <PlaceCard
                   to={`/attractions/${a.id}`}
@@ -199,8 +210,14 @@ const AttractionsPage = () => {
                   badge={attractionCategoryTranslations[a.category]}
                   description={a.description}
                   tone={a.category}
-                  imageUrl={a.photos[0] ? optimizedImage(a.photos[0].url, 600, 400) : undefined}
+                  imageUrl={
+                    a.photos[0]
+                      ? optimizedImage(a.photos[0].url, 600, 400)
+                      : undefined
+                  }
                   reviewCount={a.reviewCount}
+                  id={a.id}
+                  placeType="attraction"
                 />
               </Col>
             ))}

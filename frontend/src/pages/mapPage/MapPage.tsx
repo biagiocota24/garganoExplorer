@@ -17,6 +17,7 @@ import {
 } from "../../constants/labels";
 import FitBounds from "../../components/map/FitBounds";
 import FocusPlace from "../../components/map/FocusPlace";
+import FavoriteButton from "../../components/favoriteButton/FavoriteButton";
 
 const GARGANO_CENTER: [number, number] = [41.8, 15.8];
 const DEFAULT_ZOOM = 10;
@@ -231,12 +232,19 @@ const MapPage = () => {
                     >
                       {place.name}
                     </strong>
-                    <div className="d-flex justify-content-between align-items-center fs-6 text-success  gap-2">
+                    <div className="d-flex justify-content-between align-items-center fs-6 text-success gap-2">
                       <Link to={getDetailsPlace(place)} className="fs-6">
                         Vedi di più
                       </Link>
                       <span>{townTranslations[place.town]}</span>
                     </div>
+                    <FavoriteButton
+                      variant="overlay"
+                      id={place.id}
+                      type={
+                        place.type === "BUSINESS" ? "business" : "attraction"
+                      }
+                    />
                   </div>
                 </Popup>
               </Marker>

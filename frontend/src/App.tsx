@@ -17,6 +17,7 @@ import MyBusinessesPage from "./pages/MyBusinessesPage";
 import BusinessFormPage from "./pages/BusinessFormPage";
 import NotificationPage from "./pages/NotificationsPage";
 import MapPage from "./pages/mapPage/MapPage";
+import FavoritePage from "./pages/FavoritePage";
 
 function App() {
   const loadCurrentUser = useAuthStore((state) => state.loadCurrentUser);
@@ -39,6 +40,7 @@ function App() {
           <Route element={<RequireAuth />}>
             <Route path="/profile" element={<ProfilePage />} />
             <Route path="/notifications" element={<NotificationPage />} />
+            <Route path="/favorites" element={<FavoritePage />} />
           </Route>
           <Route element={<RequireRole roles={["ADMIN"]} />}>
             <Route

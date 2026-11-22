@@ -83,7 +83,9 @@ const BusinessesPage = () => {
         setStatus("success");
       } catch (err) {
         if (ignore) return;
-        setErrorMessage(getErrorMessage(err, "Impossibile caricare le attività."));
+        setErrorMessage(
+          getErrorMessage(err, "Impossibile caricare le attività."),
+        );
         setStatus("error");
       }
     };
@@ -151,7 +153,11 @@ const BusinessesPage = () => {
 
       {status === "success" && data && data.content.length === 0 && (
         <EmptyState
-          message={hasFilters ? "Nessuna attività trovata con i filtri selezionati." : "Nessuna attività trovata."}
+          message={
+            hasFilters
+              ? "Nessuna attività trovata con i filtri selezionati."
+              : "Nessuna attività trovata."
+          }
           action={
             hasFilters && (
               <Button variant="outline-secondary" onClick={removeFilters}>
@@ -200,6 +206,8 @@ const BusinessesPage = () => {
                       : undefined
                   }
                   rating={{ average: b.averageRating, count: b.reviewCount }}
+                  id={b.id}
+                  placeType="business"
                 />
               </Col>
             ))}

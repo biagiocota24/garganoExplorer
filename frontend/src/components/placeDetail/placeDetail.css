@@ -85,6 +85,14 @@
   pointer-events: none;
 }
 
+.place-detail__hero-content-favorite {
+  position: absolute;
+  right: 0;
+  bottom: 0;
+  z-index: 2;
+  padding: clamp(1.25rem, 3vw, 2.25rem);
+}
+
 .place-detail__counter {
   position: absolute;
   top: 1rem;
