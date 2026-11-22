@@ -5,8 +5,8 @@ import jakarta.validation.constraints.Size;
 
 public record AttractionReviewRequest(
 
-        @NotBlank
-        @Size(min = 10 , max = 2000)
+        @NotBlank(message = "Il testo della recensione è obbligatorio")
+        @Size(min = 10, max = 2000, message = "Il testo della recensione deve contenere tra {min} e {max} caratteri")
         String text
 ) {
 }

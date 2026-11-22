@@ -1,7 +1,6 @@
 package com.biagiocota.garganoexplorer.reviews.attraction;
 
 import com.biagiocota.garganoexplorer.attraction.Attraction;
-import com.biagiocota.garganoexplorer.business.Business;
 import com.biagiocota.garganoexplorer.user.User;
 import jakarta.persistence.*;
 import lombok.Getter;

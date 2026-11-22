@@ -70,7 +70,7 @@ public class GlobalExceptionHandler {
         }
         log.error("Errore non gestito", ex);
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.INTERNAL_SERVER_ERROR, "Errore nel server");
-        problem.setTitle("Errore interno del Server");
+        problem.setTitle("Errore interno del server");
         return problem;
     }
 
@@ -91,14 +91,14 @@ public class GlobalExceptionHandler {
     @ExceptionHandler(MethodArgumentTypeMismatchException.class)
     public ProblemDetail handleMethodArgumentTypeMismatch(MethodArgumentTypeMismatchException ex) {
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, "Valore non valido: " + ex.getName());
-        problem.setTitle("Parametro non vaido");
+        problem.setTitle("Parametro non valido");
         return problem;
     }
 
     @ExceptionHandler(AttractionNotFoundException.class)
     public ProblemDetail handleAttractionNotFound(AttractionNotFoundException ex) {
         ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
-        problem.setTitle("Attrazione non trovatax");
+        problem.setTitle("Attrazione non trovata");
         return problem;
     }
 
@@ -110,43 +110,43 @@ public class GlobalExceptionHandler {
     }
 
     @ExceptionHandler(ForbiddenOperationException.class)
-    public  ProblemDetail handleForribiddenOperationException(ForbiddenOperationException ex){
-        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN , ex.getMessage());
-        problem.setTitle("Tentativo contato del server non autorizzato");
+    public ProblemDetail handleForbiddenOperationException(ForbiddenOperationException ex) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.FORBIDDEN, ex.getMessage());
+        problem.setTitle("Operazione non consentita");
         return problem;
     }
 
     @ExceptionHandler(NotificationNotFoundException.class)
-    public ProblemDetail handleNotificationNotFound(NotificationNotFoundException ex){
-        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND , ex.getMessage());
+    public ProblemDetail handleNotificationNotFound(NotificationNotFoundException ex) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
         problem.setTitle("Notifica non trovata");
         return problem;
     }
 
     @ExceptionHandler(InvalidPhotoException.class)
-    public ProblemDetail handleInvalidPhoto(InvalidPhotoException ex){
-        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST , ex.getMessage());
+    public ProblemDetail handleInvalidPhoto(InvalidPhotoException ex) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.BAD_REQUEST, ex.getMessage());
         problem.setTitle("Foto non valida");
-        return  problem;
+        return problem;
     }
 
     @ExceptionHandler(PhotoNotFoundException.class)
-    public  ProblemDetail handlePhotoNotFound(PhotoNotFoundException ex){
-        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND , ex.getMessage());
+    public ProblemDetail handlePhotoNotFound(PhotoNotFoundException ex) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
         problem.setTitle("Foto non trovata");
         return problem;
     }
 
     @ExceptionHandler(ReviewAlreadyExistsException.class)
-    public  ProblemDetail handleReviewAlreadyExists(ReviewAlreadyExistsException ex){
-        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT , ex.getMessage());
-        problem.setTitle("Recensione per questa struttura gia presente");
+    public ProblemDetail handleReviewAlreadyExists(ReviewAlreadyExistsException ex) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.CONFLICT, ex.getMessage());
+        problem.setTitle("Recensione già presente");
         return problem;
     }
 
     @ExceptionHandler(ReviewNotFoundException.class)
-    public  ProblemDetail handleReviewNotFoundException(ReviewNotFoundException ex){
-        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND , ex.getMessage());
+    public ProblemDetail handleReviewNotFoundException(ReviewNotFoundException ex) {
+        ProblemDetail problem = ProblemDetail.forStatusAndDetail(HttpStatus.NOT_FOUND, ex.getMessage());
         problem.setTitle("Recensione non trovata");
         return problem;
     }

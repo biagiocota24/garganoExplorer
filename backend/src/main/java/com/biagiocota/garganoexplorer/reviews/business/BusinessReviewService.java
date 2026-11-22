@@ -41,7 +41,7 @@ public class BusinessReviewService {
     public BusinessReviewResponse create(UUID businessId , UUID authorId , BusinessReviewRequest request){
         Business businessToRate = businessRepository.findById(businessId).orElseThrow(BusinessNotFoundException::new);
         if (businessReviewRepository.existsByAuthorIdAndBusinessId(authorId, businessId)){
-            throw new ReviewAlreadyExistsException("Hai gia recensito questa attività");
+            throw new ReviewAlreadyExistsException("Hai già recensito questa attività");
         }
         BusinessReview newReview = new BusinessReview();
         newReview.setBusiness(businessToRate);

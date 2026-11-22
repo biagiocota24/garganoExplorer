@@ -10,7 +10,6 @@ import com.biagiocota.garganoexplorer.photo.PhotoRequest;
 import com.biagiocota.garganoexplorer.photo.PhotoResponse;
 import com.biagiocota.garganoexplorer.photo.PhotoService;
 import com.biagiocota.garganoexplorer.reviews.business.BusinessReviewRepository;
-import com.biagiocota.garganoexplorer.reviews.business.BusinessReviewService;
 import com.biagiocota.garganoexplorer.user.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Page;
@@ -136,7 +135,7 @@ public class BusinessService {
     private void checkCanDelete(Business business , UUID currentUserId , boolean isAdmin){
         boolean isOwner = business.getOwner().getId().equals(currentUserId);
         if(!isAdmin && !isOwner){
-            throw new ForbiddenOperationException("Non hai i permessi per modificare questa attività");
+            throw new ForbiddenOperationException("Non hai i permessi per eliminare questa attività");
         }
     }
 }
