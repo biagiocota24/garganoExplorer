@@ -184,6 +184,9 @@
   color: var(--ge-primary);
   font-weight: 600;
   font-size: 0.9rem;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
 }
 
 .place-card__more span {

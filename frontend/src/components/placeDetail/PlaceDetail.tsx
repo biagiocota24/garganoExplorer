@@ -3,6 +3,8 @@ import { Link } from "react-router";
 import { Carousel, Col, Row } from "react-bootstrap";
 import "./placeDetail.css";
 import { optimizedImage } from "../../utils/cloudinary";
+import FavoriteButton from "../favoriteButton/FavoriteButton";
+import type { PlaceType } from "../../api/review";
 
 type Props = {
   title: string;
@@ -16,6 +18,8 @@ type Props = {
   /** Contenuto della colonna laterale (informazioni, contatti, ...) */
   aside?: ReactNode;
   children?: ReactNode;
+  id?: string;
+  placeType?: PlaceType;
 };
 
 const PlaceDetail = ({
@@ -29,6 +33,8 @@ const PlaceDetail = ({
   backLabel,
   aside,
   children,
+  id,
+  placeType,
 }: Props) => {
   const [activeIndex, setActiveIndex] = useState(0);
   const [failed, setFailed] = useState<string[]>([]);
@@ -49,7 +55,10 @@ const PlaceDetail = ({
       </Link>
 
       <div className={`place-detail__media ${hasMany ? "has-thumbs" : ""}`}>
-        <header className="place-detail__hero" data-tone={tone}>
+        <header
+          className="place-detail__hero position-relative"
+          data-tone={tone}
+        >
           {hasPhotos && (
             <Carousel
               activeIndex={current}
@@ -84,6 +93,11 @@ const PlaceDetail = ({
             <h1 className="place-detail__title">{title}</h1>
             {subtitle && <p className="place-detail__subtitle">{subtitle}</p>}
           </div>
+          <span className="place-detail__hero-content-favorite">
+            {placeType && id && (
+              <FavoriteButton type={placeType} id={id} variant="inline" />
+            )}
+          </span>
         </header>
 
         {hasMany && (

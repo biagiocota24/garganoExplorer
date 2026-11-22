@@ -150,6 +150,9 @@ const AppLayout = () => {
                 >
                   <NotificationBell count={unreadCount} />
                 </Nav.Link>
+                <Nav.Link as={NavLink} to="/favorites">
+                  Preferiti
+                </Nav.Link>
                 <Nav.Link as={NavLink} to="/profile">
                   {user.firstName}
                 </Nav.Link>

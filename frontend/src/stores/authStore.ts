@@ -2,6 +2,7 @@ import { create } from "zustand";
 import type { LoginRequest, User } from "../api/auth";
 import * as auth from "../api/auth";
 import { useNotificationStore } from "./notificationStore";
+import { useFavoriteStore } from "./favoriteStore";
 
 type AuthStatus = "loading" | "authenticated" | "anonymous";
 
@@ -21,6 +22,7 @@ export const useAuthStore = create<AuthState>()((set) => ({
     try {
       const user = await auth.getCurrentUser();
       set({ user, status: "authenticated" });
+      void useFavoriteStore.getState().load();
     } catch {
       set({ user: null, status: "anonymous" });
     }
@@ -32,6 +34,7 @@ export const useAuthStore = create<AuthState>()((set) => ({
       user,
       status: "authenticated",
     });
+    void useFavoriteStore.getState().load();
   },
   logout: async () => {
     try {
@@ -42,6 +45,7 @@ export const useAuthStore = create<AuthState>()((set) => ({
         status: "anonymous",
       });
       useNotificationStore.getState().reset();
+      useFavoriteStore.getState().clear();
     }
   },
 }));

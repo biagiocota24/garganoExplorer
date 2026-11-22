@@ -3,6 +3,8 @@ import { Link } from "react-router";
 import { IoStar } from "react-icons/io5";
 import "./placeCard.css";
 import { formatRating, formatReviewCount } from "../../utils/rating";
+import FavoriteButton from "../favoriteButton/FavoriteButton";
+import type { PlaceType } from "../../api/review";
 
 type Props = {
   to: string;
@@ -19,6 +21,8 @@ type Props = {
   rating?: { average: number | null; count: number };
   /** Luoghi senza voto (attrazioni): solo il numero di recensioni */
   reviewCount?: number;
+  placeType?: PlaceType;
+  id?: string;
 };
 
 const PlaceCard = ({
@@ -32,6 +36,8 @@ const PlaceCard = ({
   extra,
   rating,
   reviewCount,
+  placeType,
+  id,
 }: Props) => {
   const [imageFailed, setImageFailed] = useState(false);
   const showImage = Boolean(imageUrl) && !imageFailed;
@@ -89,7 +95,12 @@ const PlaceCard = ({
           </div>
         )}
         <span className="place-card__more">
-          Scopri di più <span aria-hidden="true">→</span>
+          <span>
+            Scopri di più <span aria-hidden="true">→</span>
+          </span>
+          {placeType && id && (
+            <FavoriteButton type={placeType} id={id} variant="inline" />
+          )}
         </span>
       </div>
     </Link>
